@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ed_add_account_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="账户名称" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/ed_add_account_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="账户权益" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        style="@style/textSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="固定风险系数：单次风险系数固定为1.5%,每月的风险系数为4.5%" />
+</LinearLayout>

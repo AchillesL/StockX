@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">StockX</string>
+    <string name="current_amount">当前权益: %s</string>
+    <string name="current_risk">当前风险度: %s%% (单) | %s %% (月)</string>
+    <string name="total_risk_amount">总计风险额: %s (单) | %s (月)</string>
+    <string name="remain_risk_amount">剩余风险额: %s (单) | %s (月)</string>
+    <string name="used_risk_amount">已用风险额: %s (单) | %s (月)</string>
+
+    <string name="open_price">开仓价格: %s</string>
+    <string name="stop_price">止损价格: %s</string>
+    <string name="open_num">开仓数量: %d(股)</string>
+    <string name="stop_money">止损金额: %s</string>
+    <string name="win_money">盈利金额: %s</string>
+    <string name="risk_percent">风险占比: %s%%</string>
+
+    <string name="tip">提示: \n\n①本次操作消耗%s元风险资金。\n②账户风险金额剩余%s元。\n③资金风险度将从%s%%达到%s%%。</string>
+    <string name="tip2">提示: \n\n①本次操作释放%s元风险资金。\n②操作后，账户风险金额剩余%s元。\n③操作后，资金风险度将从%s%%达到%s%%。</string>
+    <string name="add_amount_tip">提示: \n\n①加仓后，该股票的成本价将会变为%s元。</string>
+    <string name="min_amount_tip">提示: \n\n①减仓后，该股票的成本价将会变为%s元。\n②账户风险金额剩余%s元。\n③资金风险度将从%s%%达到%s%%。</string>
+    <string name="fail1">止损金额超出单次的止损额度，将会开仓失败!</string>
+    <string name="fail2">止损金额超出本月的止损额度，将会操作失败!</string>
+
+</resources>
