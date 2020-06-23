@@ -16,7 +16,7 @@
     <string name="tip">提示: \n\n①本次操作消耗%s元风险资金。\n②账户风险金额剩余%s元。\n③资金风险度将从%s%%达到%s%%。</string>
     <string name="tip2">提示: \n\n①本次操作释放%s元风险资金。\n②操作后，账户风险金额剩余%s元。\n③操作后，资金风险度将从%s%%达到%s%%。</string>
     <string name="add_amount_tip">提示: \n\n①加仓后，该股票的成本价将会变为%s元。</string>
-    <string name="min_amount_tip">提示: \n\n①减仓后，该股票的成本价将会变为%s元。\n②账户风险金额剩余%s元。\n③资金风险度将从%s%%达到%s%%。</string>
+    <string name="min_amount_tip">提示: \n\n①减仓后，该股票的成本价将会变为%s元。</string>
     <string name="fail1">止损金额超出单次的止损额度，将会开仓失败!</string>
     <string name="fail2">止损金额超出本月的止损额度，将会操作失败!</string>
 

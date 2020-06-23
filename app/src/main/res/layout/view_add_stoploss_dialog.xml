@@ -145,7 +145,7 @@
                 android:layout_weight="5">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_add_num_price"
+                    android:id="@+id/ed_add_or_min_num_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -157,7 +157,7 @@
                 android:layout_weight="3">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_add_num_amount"
+                    android:id="@+id/ed_add_or_min_num_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>

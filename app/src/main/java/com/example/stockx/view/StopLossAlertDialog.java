@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -38,8 +37,8 @@ public class StopLossAlertDialog {
     private RadioButton rbAddAmount;
     private RadioButton rbMinAmount;
     private LinearLayout llOptNumPrice;
-    private TextInputEditText edAddNumPrice;
-    private TextInputEditText edAddNumAmount;
+    private TextInputEditText edAddOrMinNumPrice;
+    private TextInputEditText edAddOrMinNumAmount;
     private TextView tvTip;
 
     private boolean isFristCreate;
@@ -91,8 +90,8 @@ public class StopLossAlertDialog {
         rbAddAmount = (RadioButton) rootView.findViewById(R.id.rb_add_num);
         rbMinAmount = (RadioButton) rootView.findViewById(R.id.rb_min_num);
         llOptNumPrice = (LinearLayout) rootView.findViewById(R.id.ll_opt_num_price);
-        edAddNumPrice = (TextInputEditText) rootView.findViewById(R.id.ed_add_num_price);
-        edAddNumAmount = (TextInputEditText) rootView.findViewById(R.id.ed_add_num_amount);
+        edAddOrMinNumPrice = (TextInputEditText) rootView.findViewById(R.id.ed_add_or_min_num_price);
+        edAddOrMinNumAmount = (TextInputEditText) rootView.findViewById(R.id.ed_add_or_min_num_amount);
         tvTip = (TextView) rootView.findViewById(R.id.tvTip);
     }
 
@@ -119,8 +118,8 @@ public class StopLossAlertDialog {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (!b) return;
                     mode = MODE_ADD_AMOUNT;
-                    edAddNumPrice.setHint("加仓金额");
-                    edAddNumAmount.setHint("加仓数量");
+                    edAddOrMinNumPrice.setHint("加仓金额");
+                    edAddOrMinNumAmount.setHint("加仓数量");
                     llOptNumPrice.setVisibility(b ? View.VISIBLE : View.GONE);
                 }
             });
@@ -129,8 +128,8 @@ public class StopLossAlertDialog {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (!b) return;
                     mode = MODE_MIN_AMOUNT;
-                    edAddNumPrice.setHint("减仓金额");
-                    edAddNumAmount.setHint("减仓数量");
+                    edAddOrMinNumPrice.setHint("减仓金额");
+                    edAddOrMinNumAmount.setHint("减仓数量");
                     llOptNumPrice.setVisibility(b ? View.VISIBLE : View.GONE);
                 }
             });
@@ -142,8 +141,8 @@ public class StopLossAlertDialog {
         edStopPrice.addTextChangedListener(myTextChangedListener);
         edOpenPrice.addTextChangedListener(myTextChangedListener);
         edOpenNum.addTextChangedListener(myTextChangedListener);
-        edAddNumAmount.addTextChangedListener(myTextChangedListener);
-        edOpenNum.addTextChangedListener(myTextChangedListener);
+        edAddOrMinNumPrice.addTextChangedListener(myTextChangedListener);
+        edAddOrMinNumAmount.addTextChangedListener(myTextChangedListener);
 
         tvOpenNumAddOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,30 +254,32 @@ public class StopLossAlertDialog {
                     }
                     break;
                 }
-                case MODE_ADD_AMOUNT:
                 case MODE_MIN_AMOUNT: {
-                    double originStopMoney = (bondsDataBean.getOpenPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
-                    double addAmountPrice = TextUtils.isEmpty(edAddNumPrice.getText()) ? 0 : Double.parseDouble(edAddNumPrice.getText().toString());
-                    double addAmountNum = TextUtils.isEmpty(edAddNumAmount.getText()) ? 0 : Double.parseDouble(edAddNumAmount.getText().toString());
+                    double minAmountPrice = TextUtils.isEmpty(edAddOrMinNumPrice.getText()) ? 0 : Double.parseDouble(edAddOrMinNumPrice.getText().toString());
+                    double minAmountNum = TextUtils.isEmpty(edAddOrMinNumAmount.getText()) ? 0 : Double.parseDouble(edAddOrMinNumAmount.getText().toString());
+
+                    if (minAmountPrice == 0 || minAmountNum == 0) return;
+                    double costPrice = (openPrice * openNum - minAmountPrice * minAmountNum) * 100 / ((openNum - minAmountNum) * 100);
+                    String tip = String.format(context.getResources().getString(R.string.min_amount_tip),
+                            StockXUitls.twoDeic(costPrice)
+                    );
+                    setTextViewText(false, tip);
+                    canAdd2DB = true;
+                    break;
+                }
+                case MODE_ADD_AMOUNT: {
+                    double addAmountPrice = TextUtils.isEmpty(edAddOrMinNumPrice.getText()) ? 0 : Double.parseDouble(edAddOrMinNumPrice.getText().toString());
+                    double addAmountNum = TextUtils.isEmpty(edAddOrMinNumAmount.getText()) ? 0 : Double.parseDouble(edAddOrMinNumAmount.getText().toString());
 
                     if (addAmountPrice == 0 || addAmountNum == 0) return;
 
-                    double costPrice = 0;
-                    if (mode == MODE_ADD_AMOUNT) {
-                        costPrice = (openPrice * openNum + addAmountPrice * addAmountNum) / (openNum + addAmountNum);
-                        stopMoney = (costPrice * (openNum + addAmountNum) - stopPrice * (openNum + addAmountNum)) * 100;
-                    }
-                    //仍需要止损
-                    if (stopMoney > 0) {
+                    double costPrice = (openPrice * openNum + addAmountPrice * addAmountNum) / (openNum + addAmountNum);
 
-
-                    } else {
-
-                    }
                     String tip = String.format(context.getResources().getString(R.string.add_amount_tip),
                             StockXUitls.twoDeic(costPrice)
                     );
                     setTextViewText(false, tip);
+                    canAdd2DB = true;
                     break;
                 }
             }
@@ -347,8 +348,39 @@ public class StopLossAlertDialog {
             bondsDataBean.setAccountId(accountDataBean.getId());
             bondsDataBean.setStockName(edStockName.getText().toString());
             bondsDataBean.setStopLossPrice(Double.valueOf(edStopPrice.getText().toString()));
-            bondsDataBean.setOpenPrice(Double.valueOf(edOpenPrice.getText().toString()));
-            bondsDataBean.setBondsNum((int) (Double.valueOf(edOpenNum.getText().toString()) * 100));
+            double costPrice = 0;
+            int amountNum = 0;
+            //成本价（开仓价）、仓位数量等，与模式，即是否第一次创建、加仓、减仓有关。
+            if (mode == MODE_FRIST_CREATE) {
+                costPrice = Double.valueOf(edOpenPrice.getText().toString());
+                amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
+            } else if (mode == MODE_ADD_AMOUNT) {
+                double addAmountPrice = TextUtils.isEmpty(edAddOrMinNumPrice.getText()) ? 0 : Double.parseDouble(edAddOrMinNumPrice.getText().toString());
+                double addAmountNum = TextUtils.isEmpty(edAddOrMinNumAmount.getText()) ? 0 : Double.parseDouble(edAddOrMinNumAmount.getText().toString());
+
+                if (addAmountPrice == 0 || addAmountNum == 0) {
+                    costPrice = Double.valueOf(edOpenPrice.getText().toString());
+                    amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
+                } else {
+                    costPrice = (bondsDataBean.getOpenPrice() * bondsDataBean.getBondsNum() + addAmountPrice * addAmountNum)
+                            / (bondsDataBean.getBondsNum() + addAmountNum);
+                    amountNum = (int) (bondsDataBean.getBondsNum() + addAmountNum * 100);
+                }
+            } else if (mode == MODE_MIN_AMOUNT) {
+                double minAmountPrice = TextUtils.isEmpty(edAddOrMinNumPrice.getText()) ? 0 : Double.parseDouble(edAddOrMinNumPrice.getText().toString());
+                double minAmountNum = TextUtils.isEmpty(edAddOrMinNumAmount.getText()) ? 0 : Double.parseDouble(edAddOrMinNumAmount.getText().toString());
+
+                if (minAmountPrice == 0 || minAmountNum == 0) {
+                    costPrice = Double.valueOf(edOpenPrice.getText().toString());
+                    amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
+                } else {
+                    costPrice = (bondsDataBean.getOpenPrice() * bondsDataBean.getBondsNum() - minAmountPrice * minAmountNum * 100) /
+                            ((bondsDataBean.getBondsNum() - minAmountNum * 100));
+                    amountNum = (int) (bondsDataBean.getBondsNum() - minAmountNum * 100);
+                }
+            }
+            bondsDataBean.setOpenPrice(costPrice);
+            bondsDataBean.setBondsNum(amountNum);
 
             accountDataBean.setUsedRiskMoney(accountDataBean.getUsedRiskMoney() + myTextChangedListener.stopMoney);
             accountDataBean.setUsedMonthRiskMoney(accountDataBean.getUsedMonthRiskMoney() + myTextChangedListener.stopMoney);
