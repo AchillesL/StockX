@@ -362,8 +362,8 @@ public class StopLossAlertDialog {
                     costPrice = Double.valueOf(edOpenPrice.getText().toString());
                     amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
                 } else {
-                    costPrice = (bondsDataBean.getOpenPrice() * bondsDataBean.getBondsNum() + addAmountPrice * addAmountNum)
-                            / (bondsDataBean.getBondsNum() + addAmountNum);
+                    costPrice = (bondsDataBean.getOpenPrice() * bondsDataBean.getBondsNum() + addAmountPrice * addAmountNum * 100)
+                            / (bondsDataBean.getBondsNum() + addAmountNum * 100);
                     amountNum = (int) (bondsDataBean.getBondsNum() + addAmountNum * 100);
                 }
             } else if (mode == MODE_MIN_AMOUNT) {
