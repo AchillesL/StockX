@@ -2,6 +2,7 @@ package com.example.stockx.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("主界面");
 
         mListView = findViewById(R.id.main_listview);
         mEmptyView = findViewById(R.id.tv_empty);
@@ -166,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
                 CommonAlertDialog commonAlertDialog = new CommonAlertDialog(MainActivity.this, "添加额外已用每月风险金额",
                         null, editText.getRootView(), onClickListener);
                 commonAlertDialog.show();
+                break;
+            }
+            case R.id.menu_common_tools: {
+                Intent intent = new Intent(MainActivity.this, CommonToolsActivity.class);
+                startActivity(intent);
                 break;
             }
         }

@@ -20,4 +20,8 @@
         android:id="@+id/menu_modify_month_risk_money"
         android:title="添加额外已用每月风险金额" />
 
+    <item
+        android:id="@+id/menu_common_tools"
+        android:title="常用工具" />
+
 </menu>

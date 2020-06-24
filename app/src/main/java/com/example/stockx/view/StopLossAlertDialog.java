@@ -351,7 +351,7 @@ public class StopLossAlertDialog {
             double costPrice = 0;
             int amountNum = 0;
             //成本价（开仓价）、仓位数量等，与模式，即是否第一次创建、加仓、减仓有关。
-            if (mode == MODE_FRIST_CREATE) {
+            if (mode == MODE_FRIST_CREATE || mode == MODE_ONLY_MOVE_STOP) {
                 costPrice = Double.valueOf(edOpenPrice.getText().toString());
                 amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
             } else if (mode == MODE_ADD_AMOUNT) {
