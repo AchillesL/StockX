@@ -74,9 +74,13 @@ public class CommonToolsActivity extends AppCompatActivity {
         edAddAmount.addTextChangedListener(costPriceTextWatcher);
 
         if (getIntent() != null) {
-            edCurrentCostPrice.setText(StockXUtils.twoDeic(getIntent().getDoubleExtra("OPEN_PRICE", 0)));
-            edCurrentAmount.setText(StockXUtils.twoDeic(getIntent().getIntExtra("OPEN_AMOUNT", 0) / 100.0));
-            edAddOpenPrice.requestFocus();
+            double costprice = getIntent().getDoubleExtra("OPEN_PRICE", 0);
+            double amount = getIntent().getIntExtra("OPEN_AMOUNT", 0) / 100.0;
+            if (costprice != 0 && amount != 0) {
+                edCurrentCostPrice.setText(StockXUtils.twoDeic(costprice));
+                edCurrentAmount.setText(StockXUtils.twoDeic(amount));
+                edAddOpenPrice.requestFocus();
+            }
         }
         tvCostPriceUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
