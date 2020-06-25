@@ -21,7 +21,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.StockXUitls;
 import com.example.greendao.AccountDataBeanDao;
 import com.example.greendao.BondsDataBeanDao;
 import com.example.greendao.DaoManager;
@@ -30,6 +29,7 @@ import com.example.stockx.R;
 import com.example.stockx.bean.AccountDataBean;
 import com.example.stockx.bean.BondsDataBean;
 import com.example.stockx.bean.SettingBean;
+import com.example.stockx.utils.StockXUtils;
 import com.example.stockx.view.CommonAlertDialog;
 import com.example.stockx.view.ListViewHeader;
 import com.example.stockx.view.StopLossAlertDialog;
@@ -172,6 +172,11 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.menu_common_tools: {
                 Intent intent = new Intent(MainActivity.this, CommonToolsActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.menu_memo: {
+                Intent intent = new Intent(MainActivity.this, MemoActivity.class);
                 startActivity(intent);
                 break;
             }
@@ -322,22 +327,22 @@ public class MainActivity extends AppCompatActivity {
 
             final double openPrice = bondsDataBean.getOpenPrice();
             final double stopPrice = bondsDataBean.getStopLossPrice();
-            tvOpenPrice.setText(String.format(getResources().getString(R.string.open_price), StockXUitls.twoDeic(openPrice)));
-            tvStopPrice.setText(String.format(getResources().getString(R.string.stop_price), StockXUitls.twoDeic(stopPrice)));
+            tvOpenPrice.setText(String.format(getResources().getString(R.string.open_price), StockXUtils.twoDeic(openPrice)));
+            tvStopPrice.setText(String.format(getResources().getString(R.string.stop_price), StockXUtils.twoDeic(stopPrice)));
 
             double stopOrWinMoney = Math.abs(openPrice - stopPrice) * bondsDataBean.getBondsNum();
             if (stopPrice >= openPrice) {
                 ivSafeIcon.setVisibility(View.VISIBLE);
                 tvStopWinMoney.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                tvStopWinMoney.setText(String.format(getResources().getString(R.string.win_money), StockXUitls.twoDeic(stopOrWinMoney)));
+                tvStopWinMoney.setText(String.format(getResources().getString(R.string.win_money), StockXUtils.twoDeic(stopOrWinMoney)));
             } else {
                 ivSafeIcon.setVisibility(View.INVISIBLE);
                 tvStopWinMoney.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
-                tvStopWinMoney.setText(String.format(getResources().getString(R.string.stop_money), StockXUitls.twoDeic(stopOrWinMoney)));
+                tvStopWinMoney.setText(String.format(getResources().getString(R.string.stop_money), StockXUtils.twoDeic(stopOrWinMoney)));
             }
 
             double riskPercent = stopPrice >= openPrice ? 0 : (openPrice - stopPrice) * bondsDataBean.getBondsNum() / accountDataBean.getTotalRiskMoney() * 100.0;
-            tvRiskPercent.setText(String.format(getResources().getString(R.string.risk_percent), StockXUitls.twoDeic(riskPercent)));
+            tvRiskPercent.setText(String.format(getResources().getString(R.string.risk_percent), StockXUtils.twoDeic(riskPercent)));
             tvOpenNum.setText(String.format(getResources().getString(R.string.open_num), bondsDataBean.getBondsNum()));
 
             ivModify.setOnClickListener(new View.OnClickListener() {
@@ -386,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             if (needUpdateRiskMoney) {
-                editText.setText(StockXUitls.twoDeic(stopLossMoney));
+                editText.setText(StockXUtils.twoDeic(stopLossMoney));
                 editText.requestFocus();
                 editText.setSelection(editText.getText().toString().length());
                 commonAlertDialog = new CommonAlertDialog(MainActivity.this, title, null, editText.getRootView(), onClickListener);

@@ -9,10 +9,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.StockXUitls;
 import com.example.greendao.DaoManager;
 import com.example.stockx.R;
 import com.example.stockx.bean.AccountDataBean;
+import com.example.stockx.utils.StockXUtils;
 
 public class ListViewHeader {
 
@@ -45,7 +45,7 @@ public class ListViewHeader {
 
     public void initView(final AccountDataBean accountDataBean) {
         mTvAccountName.setText(accountDataBean.getAcountName());
-        mTvAccountAmount.setText(String.format(mContext.getResources().getString(R.string.current_amount), StockXUitls.twoDeic(accountDataBean.getCurrentMoney())));
+        mTvAccountAmount.setText(String.format(mContext.getResources().getString(R.string.current_amount), StockXUtils.twoDeic(accountDataBean.getCurrentMoney())));
 
         mIvAccountAmount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,20 +68,20 @@ public class ListViewHeader {
             }
         });
         mTvCurrentRisk.setText(String.format(mContext.getResources().getString(R.string.current_risk),
-                StockXUitls.twoDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100),
-                StockXUitls.twoDeic(accountDataBean.getUsedMonthRiskMoney() / accountDataBean.getTotalMonthRiskMoney() * 100)));
+                StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100),
+                StockXUtils.twoDeic(accountDataBean.getUsedMonthRiskMoney() / accountDataBean.getTotalMonthRiskMoney() * 100)));
 
         mTvTotalRiskAmount.setText(String.format(mContext.getResources().getString(R.string.total_risk_amount),
-                StockXUitls.twoDeic(accountDataBean.getTotalRiskMoney()),
-                StockXUitls.twoDeic(accountDataBean.getTotalMonthRiskMoney())
+                StockXUtils.twoDeic(accountDataBean.getTotalRiskMoney()),
+                StockXUtils.twoDeic(accountDataBean.getTotalMonthRiskMoney())
         ));
         mTvRemainRiskAmount.setText(String.format(mContext.getResources().getString(R.string.remain_risk_amount),
-                StockXUitls.twoDeic(accountDataBean.getTotalRiskMoney() - accountDataBean.getUsedRiskMoney()),
-                StockXUitls.twoDeic(accountDataBean.getTotalMonthRiskMoney() - accountDataBean.getUsedMonthRiskMoney())
+                StockXUtils.twoDeic(accountDataBean.getTotalRiskMoney() - accountDataBean.getUsedRiskMoney()),
+                StockXUtils.twoDeic(accountDataBean.getTotalMonthRiskMoney() - accountDataBean.getUsedMonthRiskMoney())
         ));
         mTvUsedRiskAmount.setText(String.format(mContext.getResources().getString(R.string.used_risk_amount),
-                StockXUitls.twoDeic(accountDataBean.getUsedRiskMoney()),
-                StockXUitls.twoDeic(accountDataBean.getUsedMonthRiskMoney())
+                StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney()),
+                StockXUtils.twoDeic(accountDataBean.getUsedMonthRiskMoney())
         ));
     }
 

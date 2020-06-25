@@ -9,8 +9,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.StockXUitls;
 import com.example.stockx.R;
+import com.example.stockx.utils.StockXUtils;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class CommonToolsActivity extends AppCompatActivity {
@@ -71,8 +71,8 @@ public class CommonToolsActivity extends AppCompatActivity {
                 double costPrice = (double) tvCostPriceTip.getTag(R.id.tag_cost_price);
                 double amount = (double) tvCostPriceTip.getTag(R.id.tag_amount);
 
-                edCurrentCostPrice.setText(StockXUitls.twoDeic(costPrice));
-                edCurrentAmount.setText(StockXUitls.twoDeic(amount));
+                edCurrentCostPrice.setText(StockXUtils.twoDeic(costPrice));
+                edCurrentAmount.setText(StockXUtils.twoDeic(amount));
                 edAddOpenPrice.setText("");
                 edAddAmount.setText("");
                 edAddOpenPrice.requestFocus();
@@ -121,7 +121,7 @@ public class CommonToolsActivity extends AppCompatActivity {
             double result = (curCostPrice * curAmount + curAddOpenPrice * curAddAmount) / (curAmount + curAddAmount);
             tvCostPriceTip.setTag(R.id.tag_cost_price, result);
             tvCostPriceTip.setTag(R.id.tag_amount, curAmount + curAddAmount);
-            tvCostPriceTip.setText("加仓后的成本价是: " + StockXUitls.twoDeic(result));
+            tvCostPriceTip.setText("加仓后的成本价是: " + StockXUtils.twoDeic(result));
         }
     };
 
@@ -155,7 +155,7 @@ public class CommonToolsActivity extends AppCompatActivity {
             } else {
                 price = curCostPricePer - curCostPricePer * per / 100;
             }
-            tvPer2PriceTip.setText("现成本价" + ((per > 0) ? "以上" : "以下") + "个点的价格是: " + StockXUitls.twoDeic(price));
+            tvPer2PriceTip.setText("现成本价" + ((per > 0) ? "以上" : "以下") + "个点的价格是: " + StockXUtils.twoDeic(price));
         }
     };
 
@@ -185,7 +185,7 @@ public class CommonToolsActivity extends AppCompatActivity {
             double secondPrice = Double.parseDouble(secondPriceStr);
 
             double percent = (secondPrice - firstPrice) / firstPrice;
-            tvPrice2PerTip.setText("两个价格之间相差: " + StockXUitls.twoDeic(percent * 100) + "%");
+            tvPrice2PerTip.setText("两个价格之间相差: " + StockXUtils.twoDeic(percent * 100) + "%");
         }
     };
 }
