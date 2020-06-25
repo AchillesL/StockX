@@ -22,8 +22,9 @@
             android:id="@+id/ed_per_2_price_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="输入现成本价"
             android:inputType="numberDecimal"
-            android:hint="输入现成本价" />
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -34,16 +35,32 @@
             android:id="@+id/ed_per_2_price_per"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:hint="输入百分比(%)" />
+            android:hint="输入百分比(%)"
+            android:inputType="numberSigned|numberDecimal"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/tv_per_2_price_tip"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:paddingBottom="5dp"
-        android:textSize="16sp" />
+        android:paddingBottom="5dp">
+
+        <TextView
+            android:id="@+id/tv_per_2_price_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_per_2_price_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="15dp"
+            android:text="清除"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="14sp" />
+    </RelativeLayout>
 
 </LinearLayout>

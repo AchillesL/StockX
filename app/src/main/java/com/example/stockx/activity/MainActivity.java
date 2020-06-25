@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -56,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         setTitle("主界面");
 
         mListView = findViewById(R.id.main_listview);
@@ -67,6 +71,18 @@ public class MainActivity extends AppCompatActivity {
 
         mSettingBean = mSettingBeanDao.load(0L);
         updateView();
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                BondsDataBean bondsDataBean = (BondsDataBean) mListBaseAdapter.getItem(i - 1);
+                Intent intent = new Intent(MainActivity.this, CommonToolsActivity.class);
+                intent.putExtra("OPEN_PRICE", bondsDataBean.getOpenPrice());
+                intent.putExtra("OPEN_AMOUNT", bondsDataBean.getBondsNum());
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
     private void updateView() {

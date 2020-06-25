@@ -2,6 +2,7 @@ package com.example.stockx.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ public class MemoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memo);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setTitle("备忘录");
         findViews();
     }
