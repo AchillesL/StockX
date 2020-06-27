@@ -170,7 +170,7 @@ public class CommonToolsActivity extends AppCompatActivity {
             tvCostPriceTip.setText(
                     "加仓后, 成本价是:  " + StockXUtils.twoDeic(costPrice) + "元"
                             + "\n加仓后, 总金额是:  " + StockXUtils.twoDeic(sum) + "元"
-                            + "\n加仓后，成本价与现价的距离:  " + StockXUtils.twoDeic(distance) + "%")
+                            + "\n加仓后, 成本价与现价的距离:  " + StockXUtils.twoDeic(distance) + "%")
             ;
         }
     };
