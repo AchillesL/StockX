@@ -5,20 +5,28 @@
         android:id="@+id/menu_add_stop_item"
         android:title="添加止损单"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_add_account"
-        android:title="添加账户" />
-    <item
-        android:id="@+id/menu_del_account"
-        android:title="删除当前账户" />
 
-    <item
-        android:id="@+id/menu_reset_month_risk_money"
-        android:title="重置每月风险额度" />
+    <item android:title="账户">
+        <menu>
+            <item
+                android:id="@+id/menu_add_account"
+                android:title="添加账户" />
+            <item
+                android:id="@+id/menu_del_account"
+                android:title="删除当前账户" />
+        </menu>
+    </item>
 
-    <item
-        android:id="@+id/menu_modify_month_risk_money"
-        android:title="添加额外已用每月风险金额" />
+    <item android:title="每月风险额度">
+        <menu>
+            <item
+                android:id="@+id/menu_reset_month_risk_money"
+                android:title="重置每月风险额度" />
+            <item
+                android:id="@+id/menu_modify_month_risk_money"
+                android:title="添加额外已用每月风险额度" />
+        </menu>
+    </item>
 
     <item
         android:id="@+id/menu_common_tools"

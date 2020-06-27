@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">StockX</string>
     <string name="current_amount">当前权益: %s</string>
-    <string name="current_risk">当前风险度: %s %% (单) | %s %% (月)</string>
-    <string name="total_risk_amount">总计风险额: %s(单) | %s(月)</string>
-    <string name="remain_risk_amount">剩余风险额: %s (单) | %s (月)</string>
-    <string name="used_risk_amount">已用风险额: %s (单) | %s (月)</string>
+    <string name="current_risk">现风险度: %s %% (S) | %s %% (M)</string>
+    <string name="total_risk_amount">总计风险额: %s (S) | %s (M)</string>
+    <string name="remain_risk_amount">剩余风险额: %s (S) | %s (M)</string>
+    <string name="used_risk_amount">已用风险额: %s (S) | %s (M)</string>
 
     <string name="open_price">开仓价格: %s</string>
     <string name="stop_price">止损价格: %s</string>
