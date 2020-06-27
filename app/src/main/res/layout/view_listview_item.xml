@@ -3,10 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="6dp">
+    android:padding="10dp">
 
     <androidx.cardview.widget.CardView
-        style="@style/cardViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -23,7 +22,6 @@
                 android:gravity="center_vertical">
 
                 <TextView
-                    android:textStyle="bold"
                     android:id="@+id/tv_stock_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

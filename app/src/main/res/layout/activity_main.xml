@@ -3,23 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fafafa"
+    android:background="#efefef"
     android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
     <ListView
         android:id="@+id/main_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:divider="@null"
-        android:paddingBottom="10dp" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/tv_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
         android:text="请先创建账户!"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
