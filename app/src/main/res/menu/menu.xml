@@ -12,6 +12,9 @@
                 android:id="@+id/menu_add_account"
                 android:title="添加账户" />
             <item
+                android:id="@+id/menu_change_account_name"
+                android:title="修改当前账户名" />
+            <item
                 android:id="@+id/menu_del_account"
                 android:title="删除当前账户" />
         </menu>

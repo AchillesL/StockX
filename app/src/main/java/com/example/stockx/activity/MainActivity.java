@@ -127,6 +127,14 @@ public class MainActivity extends AppCompatActivity {
                 addAccount();
                 break;
             }
+            case R.id.menu_change_account_name: {
+                if (mSettingBean.getCurrentAccountID() == -1) {
+                    Toast.makeText(this, "请先创建账户!", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                changeAccountName();
+                break;
+            }
             case R.id.menu_del_account: {
                 if (mSettingBean.getCurrentAccountID() == -1) {
                     Toast.makeText(this, "请先创建账户!", Toast.LENGTH_SHORT).show();
@@ -201,6 +209,24 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void changeAccountName() {
+        final AccountDataBean accountDataBean = getCurrentAccountDataBean();
+        final EditText editText = (EditText) LayoutInflater.from(this).inflate(R.layout.view_edittext_dialog, null).findViewById(R.id.editText);
+        editText.requestFocus();
+        editText.setText(String.valueOf(accountDataBean.getAcountName()));
+        editText.setSelection(editText.getText().toString().length());
+
+        CommonAlertDialog commonAlertDialog = new CommonAlertDialog(this, "修改当前账户名", null, editText.getRootView(), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                accountDataBean.setAcountName(editText.getText().toString());
+                DaoManager.getInstance().getDaoSession().getAccountDataBeanDao().insertOrReplace(accountDataBean);
+                mListViewHeader.refresh(accountDataBean);
+            }
+        });
+        commonAlertDialog.show();
     }
 
     private void deleteAccount() {
