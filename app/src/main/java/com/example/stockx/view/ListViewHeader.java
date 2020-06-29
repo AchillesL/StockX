@@ -75,13 +75,13 @@ public class ListViewHeader {
                 StockXUtils.twoDeic(accountDataBean.getTotalRiskMoney()),
                 StockXUtils.twoDeic(accountDataBean.getTotalMonthRiskMoney())
         ));
-        mTvUsedRiskAmount.setText(String.format(mContext.getResources().getString(R.string.used_risk_amount),
-                StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney()),
-                StockXUtils.twoDeic(accountDataBean.getUsedMonthRiskMoney())
-        ));
         mTvRemainRiskAmount.setText(String.format(mContext.getResources().getString(R.string.remain_risk_amount),
                 StockXUtils.twoDeic(accountDataBean.getTotalRiskMoney() - accountDataBean.getUsedRiskMoney()),
                 StockXUtils.twoDeic(accountDataBean.getTotalMonthRiskMoney() - accountDataBean.getUsedMonthRiskMoney())
+        ));
+        mTvUsedRiskAmount.setText(String.format(mContext.getResources().getString(R.string.used_risk_amount),
+                StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney()),
+                StockXUtils.twoDeic(accountDataBean.getUsedMonthRiskMoney())
         ));
     }
 

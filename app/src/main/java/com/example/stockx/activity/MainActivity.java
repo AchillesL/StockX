@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 if (i < mListView.getHeaderViewsCount()) {
                     return false;
                 }
-                BondsDataBean bondsDataBean = (BondsDataBean) mListBaseAdapter.getItem(i - mListView.getHeaderViewsCount());
+                BondsDataBean bondsDataBean = (BondsDataBean) mListBaseAdapter.getItem(i - 1);
                 Intent intent = new Intent(MainActivity.this, CommonToolsActivity.class);
                 intent.putExtra("OPEN_PRICE", bondsDataBean.getOpenPrice());
                 intent.putExtra("OPEN_AMOUNT", bondsDataBean.getBondsNum());
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 CommonAlertDialog commonAlertDialog = new CommonAlertDialog(this,
                         "提示",
-                        "确定要重置每月的风险额度吗?\n(不忘初心，方得始终！)",
+                        "确定要重置每月的风险额度吗?\n不忘初心，方得始终！",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
