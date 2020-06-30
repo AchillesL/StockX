@@ -5,20 +5,21 @@
     android:layout_height="match_parent"
     android:background="#efefef"
     android:orientation="vertical"
+    android:paddingBottom="10dp"
     tools:context=".activity.MainActivity">
 
     <ListView
         android:id="@+id/main_listview"
-        android:divider="@null"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:divider="@null" />
 
     <TextView
         android:id="@+id/tv_empty"
-        android:text="请先创建账户!"
-        android:textSize="20sp"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="请先创建账户!"
+        android:textSize="20sp" />
 
 </LinearLayout>

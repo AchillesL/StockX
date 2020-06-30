@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                                 accountDataBean.setUsedMonthRiskMoney(usedMonthRiskMoney);
+                                accountDataBean.setUsedRiskMoney(usedMonthRiskMoney);//同步更新，以防多次运算后出错
                                 mAccountDataBeanDao.insertOrReplace(accountDataBean);
                                 mListViewHeader.refresh(accountDataBean);
                             }
