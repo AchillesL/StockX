@@ -425,7 +425,7 @@ public class MainActivity extends AppCompatActivity {
                         accountDataBean.setUsedRiskMoney(accountDataBean.getUsedRiskMoney() - stopMoney);
 
                         double realStopMoney = TextUtils.isEmpty(editText.getText()) ? 0 : Double.parseDouble(editText.getText().toString());
-                        if (realStopMoney > 0) {
+                        if (realStopMoney >= 0) {
                             accountDataBean.setUsedMonthRiskMoney(accountDataBean.getUsedMonthRiskMoney() - (stopLossMoney - realStopMoney));
                         }
 
