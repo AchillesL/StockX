@@ -12,11 +12,15 @@ import android.widget.TextView;
 import com.example.greendao.DaoManager;
 import com.example.stockx.R;
 import com.example.stockx.bean.AccountDataBean;
+import com.example.stockx.bean.BondsDataBean;
 import com.example.stockx.utils.StockXUtils;
+
+import java.util.List;
 
 public class ListViewHeader {
 
-    private View mView;
+    private View mHeaderView1;
+    private View mHeaderView2;
     private TextView mTvAccountName;
     private TextView mTvAccountAmount;
     private ImageView mIvAccountAmount;
@@ -24,6 +28,8 @@ public class ListViewHeader {
     private TextView mTvTotalRiskAmount;
     private TextView mTvRemainRiskAmount;
     private TextView mTvUsedRiskAmount;
+
+    private TextView mTvStockStatus;
     private Context mContext;
 
     public ListViewHeader(Context context, AccountDataBean accountDataBean) {
@@ -33,14 +39,17 @@ public class ListViewHeader {
     }
 
     private void findViews(Context context) {
-        mView = LinearLayout.inflate(context, R.layout.header_listview, null);
-        mTvAccountName = mView.findViewById(R.id.tv_account_name);
-        mTvAccountAmount = mView.findViewById(R.id.tv_account_amount);
-        mIvAccountAmount = mView.findViewById(R.id.iv_account_amount);
-        mTvCurrentRisk = mView.findViewById(R.id.tv_current_risk);
-        mTvTotalRiskAmount = mView.findViewById(R.id.tv_total_risk_amount);
-        mTvRemainRiskAmount = mView.findViewById(R.id.tv_remain_risk_amount);
-        mTvUsedRiskAmount = mView.findViewById(R.id.tv_used_risk_amount);
+        mHeaderView1 = LinearLayout.inflate(context, R.layout.header_listview_1, null);
+        mHeaderView2 = LinearLayout.inflate(context, R.layout.header_listview_2, null);
+        mTvAccountName = mHeaderView1.findViewById(R.id.tv_account_name);
+        mTvAccountAmount = mHeaderView1.findViewById(R.id.tv_account_amount);
+        mIvAccountAmount = mHeaderView1.findViewById(R.id.iv_account_amount);
+        mTvCurrentRisk = mHeaderView1.findViewById(R.id.tv_current_risk);
+        mTvTotalRiskAmount = mHeaderView1.findViewById(R.id.tv_total_risk_amount);
+        mTvRemainRiskAmount = mHeaderView1.findViewById(R.id.tv_remain_risk_amount);
+        mTvUsedRiskAmount = mHeaderView1.findViewById(R.id.tv_used_risk_amount);
+
+        mTvStockStatus = mHeaderView2.findViewById(R.id.tv_stock_status);
     }
 
     public void initView(final AccountDataBean accountDataBean) {
@@ -83,13 +92,32 @@ public class ListViewHeader {
                 StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney()),
                 StockXUtils.twoDeic(accountDataBean.getUsedMonthRiskMoney())
         ));
+
+        int stockNum = 0;
+        int winStockNum = 0;
+        List<BondsDataBean> bondsDataBeans = DaoManager.getInstance().getDaoSession().getBondsDataBeanDao().loadAll();
+        for (int i = 0; i < bondsDataBeans.size(); i++) {
+            BondsDataBean bondsDataBean = bondsDataBeans.get(i);
+            if (bondsDataBean.getAccountId() == accountDataBean.getId()) {
+                stockNum++;
+                if (bondsDataBean.getStopLossPrice() >= bondsDataBean.getOpenPrice()) {
+                    winStockNum++;
+                }
+            }
+        }
+        String status = "目前账户持有:  " + stockNum + "  只股票,  其中无风险共有: " + winStockNum + " 只。";
+        mTvStockStatus.setText(status);
     }
 
     public void refresh(AccountDataBean accountDataBean) {
         initView(accountDataBean);
     }
 
-    public View getView() {
-        return mView;
+    public View getView1() {
+        return mHeaderView1;
+    }
+
+    public View getView2() {
+        return mHeaderView2;
     }
 }

@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 if (i < mListView.getHeaderViewsCount()) {
                     return false;
                 }
-                BondsDataBean bondsDataBean = (BondsDataBean) mListBaseAdapter.getItem(i - 1);
+                BondsDataBean bondsDataBean = (BondsDataBean) mListBaseAdapter.getItem(i - mListView.getHeaderViewsCount());
                 Intent intent = new Intent(MainActivity.this, CommonToolsActivity.class);
                 intent.putExtra("OPEN_PRICE", bondsDataBean.getOpenPrice());
                 intent.putExtra("OPEN_AMOUNT", bondsDataBean.getBondsNum());
@@ -96,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
             AccountDataBean accountDataBean = getCurrentAccountDataBean();
 
             mListViewHeader = new ListViewHeader(MainActivity.this, accountDataBean);
-            mListView.addHeaderView(mListViewHeader.getView());
+            mListView.addHeaderView(mListViewHeader.getView1());
+            mListView.addHeaderView(mListViewHeader.getView2());
             mListView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
 
@@ -208,6 +209,19 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             }
+            case R.id.menu_help: {
+                CommonAlertDialog commonAlertDialog = new CommonAlertDialog(MainActivity.this,
+                        "帮助",
+                        "该应用用于记录股票交易状况，\n\n其中:\n" +
+                                "①每(多)笔亏损的单(多)笔金额不允许超过本金的1.5%，否则将无法开仓。\n\n" +
+                                "②每个月亏损的金额不允许超过本金的4.5%，否则这个月将停止交易。每个月重置一次月风险金额。\n\n" +
+                                "③不忘初心，方得始终! \n\n" +
+                                "切记:\n" +
+                                "①只持有被市场证明了是正确的仓位，已建立的仓位在得到市场证明之前应当不断减少。\n\n" +
+                                "②无一例外地对每一笔被证明是正常的仓位，进行加仓操作。", null);
+                commonAlertDialog.show();
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -246,7 +260,8 @@ public class MainActivity extends AppCompatActivity {
                 mSettingBean.setCurrentAccountID(-1);
                 mSettingBeanDao.insertOrReplace(mSettingBean);
                 updateView();
-                mListView.removeHeaderView(mListViewHeader.getView());
+                mListView.removeHeaderView(mListViewHeader.getView1());
+                mListView.removeHeaderView(mListViewHeader.getView2());
                 Toast.makeText(MainActivity.this, "删除成功!", Toast.LENGTH_SHORT).show();
             }
         };
