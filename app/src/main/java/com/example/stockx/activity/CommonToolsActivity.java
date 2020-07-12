@@ -37,6 +37,13 @@ public class CommonToolsActivity extends AppCompatActivity {
     private TextView tvPrice2PerTip;
     private TextView tvPrice2PerClear;
 
+    //止损金额计算
+    private TextInputEditText edStopLossCostPrice;
+    private TextInputEditText edStopLossStopPrice;
+    private TextInputEditText edStopLossAmount;
+    private TextView tvStopLossTip;
+    private TextView tvStopLossClear;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +72,12 @@ public class CommonToolsActivity extends AppCompatActivity {
         edPrice2PerSecondPrice = (TextInputEditText) findViewById(R.id.ed_price_2_per_second_price);
         tvPrice2PerTip = (TextView) findViewById(R.id.tv_price_2_per_tip);
         tvPrice2PerClear = (TextView) findViewById(R.id.tv_price_2_per_clear);
+
+        edStopLossCostPrice = (TextInputEditText) findViewById(R.id.ed_stop_loss_cost_price);
+        edStopLossStopPrice = (TextInputEditText) findViewById(R.id.ed_stop_loss_stop_price);
+        edStopLossAmount = (TextInputEditText) findViewById(R.id.ed_stop_loss_amount);
+        tvStopLossTip = (TextView) findViewById(R.id.tv_stop_loss_tip);
+        tvStopLossClear = (TextView) findViewById(R.id.tv_stop_loss_clear);
     }
 
     private void initView() {
@@ -130,6 +143,19 @@ public class CommonToolsActivity extends AppCompatActivity {
                 edPrice2PerFirstPrice.requestFocus();
             }
         });
+
+        edStopLossCostPrice.addTextChangedListener(stoplossTextWatcher);
+        edStopLossStopPrice.addTextChangedListener(stoplossTextWatcher);
+        edStopLossAmount.addTextChangedListener(stoplossTextWatcher);
+        tvStopLossClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edStopLossCostPrice.setText("");
+                edStopLossStopPrice.setText("");
+                edStopLossAmount.setText("");
+                edStopLossCostPrice.requestFocus();
+            }
+        });
     }
 
     TextWatcher costPriceTextWatcher = new TextWatcher() {
@@ -163,13 +189,13 @@ public class CommonToolsActivity extends AppCompatActivity {
             double curAddAmount = Double.parseDouble(curAddAmountStr);
 
             double costPrice = (curCostPrice * curAmount + curAddOpenPrice * curAddAmount) / (curAmount + curAddAmount);
-            double sum = costPrice * (curAddAmount + curAmount) * 100;
+            double sum = costPrice * (curAddAmount + curAmount) * 100 + (curAddOpenPrice - curCostPrice) * curAmount * 100;
             double distance = (curAddOpenPrice - costPrice) / costPrice * 100.0;
             tvCostPriceTip.setTag(R.id.tag_cost_price, costPrice);
             tvCostPriceTip.setTag(R.id.tag_amount, curAmount + curAddAmount);
             tvCostPriceTip.setText(
                     "加仓后, 成本价是:  " + StockXUtils.twoDeic(costPrice) + "元"
-                            + "\n加仓后, 总金额是:  " + StockXUtils.twoDeic(sum) + "元"
+                            + "\n加仓后, 当前市值是:  " + StockXUtils.twoDeic(sum) + "元"
                             + "\n加仓后，成本价与现价的距离:  " + StockXUtils.twoDeic(distance) + "%")
             ;
         }
@@ -234,4 +260,35 @@ public class CommonToolsActivity extends AppCompatActivity {
             tvPrice2PerTip.setText("两个价格之间相差: " + StockXUtils.twoDeic(percent * 100) + "%");
         }
     };
+
+    TextWatcher stoplossTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String strCosrPrice = edStopLossCostPrice.getText().toString();
+            String strStopPrice = edStopLossStopPrice.getText().toString();
+            String strAmount = edStopLossAmount.getText().toString();
+
+            if (TextUtils.isEmpty(strStopPrice) || TextUtils.isEmpty(strCosrPrice) || TextUtils.isEmpty(strAmount)) {
+                tvStopLossTip.setVisibility(View.INVISIBLE);
+                return;
+            } else {
+                tvStopLossTip.setVisibility(View.VISIBLE);
+            }
+
+            double result = (Double.parseDouble(strCosrPrice) - Double.parseDouble(strStopPrice)) * Double.parseDouble(strAmount) * 100;
+            result = result < 0 ? 0 : result;
+            tvStopLossTip.setText("本次的止损金额是: " + StockXUtils.twoDeic(result) + " 元");
+        }
+    };
+
 }
