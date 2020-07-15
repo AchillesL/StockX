@@ -190,13 +190,13 @@ public class CommonToolsActivity extends AppCompatActivity {
 
             double costPrice = (curCostPrice * curAmount + curAddOpenPrice * curAddAmount) / (curAmount + curAddAmount);
             double sum = costPrice * (curAddAmount + curAmount) * 100 + (curAddOpenPrice - curCostPrice) * curAmount * 100;
-            double distance = (curAddOpenPrice - costPrice) / costPrice * 100.0;
+            double distance = (curAddOpenPrice - costPrice) / curAddOpenPrice * 100.0;
             tvCostPriceTip.setTag(R.id.tag_cost_price, costPrice);
             tvCostPriceTip.setTag(R.id.tag_amount, curAmount + curAddAmount);
             tvCostPriceTip.setText(
                     "加仓后, 成本价是:  " + StockXUtils.twoDeic(costPrice) + "元"
                             + "\n加仓后, 当前市值是:  " + StockXUtils.twoDeic(sum) + "元"
-                            + "\n加仓后，成本价与现价的距离:  " + StockXUtils.twoDeic(distance) + "%")
+                            + "\n加仓后, 现价到成本价的距离是:  " + StockXUtils.twoDeic(distance) + "%")
             ;
         }
     };
