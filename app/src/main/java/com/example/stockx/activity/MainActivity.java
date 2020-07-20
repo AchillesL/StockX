@@ -213,8 +213,8 @@ public class MainActivity extends AppCompatActivity {
                 CommonAlertDialog commonAlertDialog = new CommonAlertDialog(MainActivity.this,
                         "帮助",
                         "该应用用于记录股票交易状况，\n\n其中:\n" +
-                                "①每(多)笔亏损的单(多)笔金额不允许超过本金的1.5%，否则将无法开仓。\n\n" +
-                                "②每个月亏损的金额不允许超过本金的4.5%，否则这个月将停止交易。每个月重置一次月风险金额。\n\n" +
+                                "①每(多)笔亏损的单(多)笔金额不允许超过本金的2%，否则将无法开仓。\n\n" +
+                                "②每个月亏损的金额不允许超过本金的6%，否则这个月将停止交易。每个月重置一次月风险金额。\n\n" +
                                 "③不忘初心，方得始终! \n\n" +
                                 "切记:\n" +
                                 "①只持有被市场证明了是正确的仓位，已建立的仓位在得到市场证明之前应当不断减少。\n\n" +
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                 //账户权益
                 double currentAmount = Double.parseDouble(edAddAccountAmount.getEditableText().toString());
                 accountDataBean.setCurrentMoney(currentAmount);
-                double riskRatio = 1.5;
+                double riskRatio = 2;
                 accountDataBean.setRiskRatio(riskRatio);
                 //每个月的风险资金（每个月若亏掉这么多资金，本月停止交易）
                 double monthRiskRatio = riskRatio * 3;

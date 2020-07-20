@@ -274,20 +274,26 @@ public class CommonToolsActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            String strCosrPrice = edStopLossCostPrice.getText().toString();
+            String strCostPrice = edStopLossCostPrice.getText().toString();
             String strStopPrice = edStopLossStopPrice.getText().toString();
             String strAmount = edStopLossAmount.getText().toString();
 
-            if (TextUtils.isEmpty(strStopPrice) || TextUtils.isEmpty(strCosrPrice) || TextUtils.isEmpty(strAmount)) {
+            if (TextUtils.isEmpty(strStopPrice) || TextUtils.isEmpty(strCostPrice) || TextUtils.isEmpty(strAmount)) {
                 tvStopLossTip.setVisibility(View.INVISIBLE);
                 return;
             } else {
                 tvStopLossTip.setVisibility(View.VISIBLE);
             }
 
-            double result = (Double.parseDouble(strCosrPrice) - Double.parseDouble(strStopPrice)) * Double.parseDouble(strAmount) * 100;
-            result = result < 0 ? 0 : result;
-            tvStopLossTip.setText("本次的止损金额是: " + StockXUtils.twoDeic(result) + " 元");
+            double costPrice = Double.parseDouble(strCostPrice);
+            double sencondPrice = Double.parseDouble(strStopPrice);
+            double amount = Double.parseDouble(strAmount);
+
+            if (sencondPrice > costPrice) {
+                tvStopLossTip.setText("本次的止盈金额是: " + StockXUtils.twoDeic((sencondPrice - costPrice) * amount * 100) + " 元");
+            } else {
+                tvStopLossTip.setText("本次的止损金额是: " + StockXUtils.twoDeic((costPrice - sencondPrice) * amount * 100) + " 元");
+            }
         }
     };
 

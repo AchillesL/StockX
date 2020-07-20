@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="止损金额计算" />
+        android:text="止损/止盈金额计算" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
             android:id="@+id/ed_stop_loss_stop_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="输入止损价"
+            android:hint="输入止损/止盈价"
             android:inputType="numberDecimal"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
