@@ -20,27 +20,39 @@
         </menu>
     </item>
 
-    <item android:title="每月风险额度">
+    <item android:title="风险额度管理">
         <menu>
+            <item
+                android:id="@+id/menu_modify_risk_ratio"
+                android:title="修改单次风险额度" />
             <item
                 android:id="@+id/menu_reset_month_risk_money"
                 android:title="重置每月风险额度" />
             <item
                 android:id="@+id/menu_modify_month_risk_money"
-                android:title="添加额外已用每月风险额度" />
+                android:title="添加额外的已用每月风险额度" />
         </menu>
     </item>
+
+    <item
+        android:id="@+id/menu_add_preset_item"
+        android:title="添加预备单" />
 
     <item
         android:id="@+id/menu_common_tools"
         android:title="常用工具" />
 
-    <item
-        android:id="@+id/menu_memo"
-        android:title="备忘录" />
 
-    <item
-        android:id="@+id/menu_help"
-        android:title="帮助" />
+    <item android:title="其他">
+        <menu>
+            <item
+                android:id="@+id/menu_memo"
+                android:title="备忘录" />
+
+            <item
+                android:id="@+id/menu_help"
+                android:title="帮助" />
+        </menu>
+    </item>
 
 </menu>

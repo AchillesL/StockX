@@ -8,16 +8,13 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.greendao.DaoManager;
 import com.example.stockx.R;
+import com.example.stockx.bean.AbsBondsDataBean;
 import com.example.stockx.bean.AccountDataBean;
 import com.example.stockx.bean.BondsDataBean;
+import com.example.stockx.bean.PresetBondsDataBean;
 import com.example.stockx.utils.StockXUtils;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -32,43 +29,50 @@ public class StopLossAlertDialog {
     private TextView tvOpenNumAddOne;
     private TextView tvOpenNumMinOne;
     private TextView tvOpenNumAddTen;
-    private LinearLayout llOpt;
-    private RadioButton rbOnlyMoveStop;
-    private RadioButton rbAddAmount;
-    private RadioButton rbMinAmount;
-    private LinearLayout llOptNumPrice;
-    private TextInputEditText edAddOrMinNumPrice;
-    private TextInputEditText edAddOrMinNumAmount;
     private TextView tvTip;
 
-    private boolean isFristCreate;
+    private AbsBondsDataBean absBondsDataBean;
     private BondsDataBean bondsDataBean;
+    private PresetBondsDataBean presetBondsDataBean;
 
-    private final static int MODE_FRIST_CREATE = 0;
-    private final static int MODE_ONLY_MOVE_STOP = 1;
-    private final static int MODE_ADD_AMOUNT = 2;
-    private final static int MODE_MIN_AMOUNT = 3;
+    public final static int MODE_FIRST_CREATE_NORMAL = 0;
+    public final static int MODE_FIRST_CREATE_PRESET = 1;
+    public final static int MODE_MODIFY_NORMAL = 2;
+    public final static int MODE_MODIFY_PRESET = 3;
 
     private int mode;
     private AccountDataBean accountDataBean;
 
-    public interface ICallback {
-        public void refresh(AccountDataBean accountDataBean);
+    public interface ICallbackStopLoss {
+        public void refresh(boolean canAdd2DB, AccountDataBean accountDataBean, BondsDataBean bondsDataBean);
     }
 
-    private ICallback iCallback;
+    public interface ICallbackPreset {
+        public void refresh(PresetBondsDataBean presetBondsDataBean);
+    }
+
+    private ICallbackStopLoss iCallbackStopLoss;
+    private ICallbackPreset iCallbackPreset;
+
     MyTextChangedListener myTextChangedListener;
 
-    public StopLossAlertDialog(Context context, boolean isFirstCreate, BondsDataBean bondsDataBean, AccountDataBean accountDataBean) {
-        this.mode = isFirstCreate ? MODE_FRIST_CREATE : MODE_ONLY_MOVE_STOP;
+    public StopLossAlertDialog(Context context, int mode, AbsBondsDataBean absBondsDataBean, AccountDataBean accountDataBean) {
+        this.mode = mode;
         this.context = context;
-        this.isFristCreate = isFirstCreate;
-        this.bondsDataBean = bondsDataBean;
         this.accountDataBean = accountDataBean;
+        this.absBondsDataBean = absBondsDataBean;
 
         View rootView = LayoutInflater.from(context).inflate(R.layout.view_add_stoploss_dialog, null);
         mBuilder = new AlertDialog.Builder(context);
-        mBuilder.setTitle(isFristCreate ? "创建止损单" : "调整止损单");
+        if (mode == MODE_FIRST_CREATE_NORMAL) {
+            mBuilder.setTitle("创建止损单");
+        } else if (mode == MODE_FIRST_CREATE_PRESET) {
+            mBuilder.setTitle("创建预设单");
+        } else if (mode == MODE_MODIFY_NORMAL) {
+            mBuilder.setTitle("调整止损单");
+        } else if (mode == MODE_MODIFY_PRESET) {
+            mBuilder.setTitle("调整预设单");
+        }
         mBuilder.setView(rootView);
         mBuilder.setNegativeButton(android.R.string.cancel, null);
         mBuilder.setPositiveButton(android.R.string.ok, onClickListener);
@@ -85,64 +89,24 @@ public class StopLossAlertDialog {
         tvOpenNumAddOne = (TextView) rootView.findViewById(R.id.tv_open_num_add_one);
         tvOpenNumMinOne = (TextView) rootView.findViewById(R.id.tv_open_num_min_one);
         tvOpenNumAddTen = (TextView) rootView.findViewById(R.id.tv_open_num_add_ten);
-        llOpt = (LinearLayout) rootView.findViewById(R.id.ll_opt);
-        rbOnlyMoveStop = (RadioButton) rootView.findViewById(R.id.rb_only_move_stop);
-        rbAddAmount = (RadioButton) rootView.findViewById(R.id.rb_add_num);
-        rbMinAmount = (RadioButton) rootView.findViewById(R.id.rb_min_num);
-        llOptNumPrice = (LinearLayout) rootView.findViewById(R.id.ll_opt_num_price);
-        edAddOrMinNumPrice = (TextInputEditText) rootView.findViewById(R.id.ed_add_or_min_num_price);
-        edAddOrMinNumAmount = (TextInputEditText) rootView.findViewById(R.id.ed_add_or_min_num_amount);
         tvTip = (TextView) rootView.findViewById(R.id.tvTip);
     }
 
 
     private void initViews() {
-        if (!isFristCreate) {
-            edStockName.setText(bondsDataBean.getStockName());
-            edOpenPrice.setText(StockXUtils.twoDeic(bondsDataBean.getOpenPrice()));
-            edStopPrice.setText(StockXUtils.twoDeic(bondsDataBean.getStopLossPrice()));
-            edOpenNum.setText(String.valueOf(bondsDataBean.getBondsNum() / 100.0));
+        if (mode == MODE_MODIFY_NORMAL || mode == MODE_MODIFY_PRESET) {
+            edStockName.setText(absBondsDataBean.getStockName());
+            edOpenPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getOpenPrice()));
+            edStopPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getStopLossPrice()));
+            edOpenNum.setText(String.valueOf(absBondsDataBean.getBondsNum() / 100.0));
             edOpenNum.requestFocus();
             edOpenNum.setSelection(edOpenNum.getText().toString().length());
-
-            rbOnlyMoveStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (!b) return;
-                    llOptNumPrice.setVisibility(b ? View.VISIBLE : View.GONE);
-                    mode = MODE_ONLY_MOVE_STOP;
-                }
-            });
-            rbAddAmount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (!b) return;
-                    mode = MODE_ADD_AMOUNT;
-                    edAddOrMinNumPrice.setHint("加仓金额");
-                    edAddOrMinNumAmount.setHint("加仓数量");
-                    llOptNumPrice.setVisibility(b ? View.VISIBLE : View.GONE);
-                }
-            });
-            rbMinAmount.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (!b) return;
-                    mode = MODE_MIN_AMOUNT;
-                    edAddOrMinNumPrice.setHint("减仓金额");
-                    edAddOrMinNumAmount.setHint("减仓数量");
-                    llOptNumPrice.setVisibility(b ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            llOpt.setVisibility(View.GONE);
         }
 
         myTextChangedListener = new MyTextChangedListener(accountDataBean);
         edStopPrice.addTextChangedListener(myTextChangedListener);
         edOpenPrice.addTextChangedListener(myTextChangedListener);
         edOpenNum.addTextChangedListener(myTextChangedListener);
-        edAddOrMinNumPrice.addTextChangedListener(myTextChangedListener);
-        edAddOrMinNumAmount.addTextChangedListener(myTextChangedListener);
 
         tvOpenNumAddOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,7 +164,9 @@ public class StopLossAlertDialog {
         @Override
         public void afterTextChanged(Editable editable) {
             if (!TextUtils.isEmpty(edStopPrice.getText().toString()) && !TextUtils.isEmpty(edOpenPrice.getText().toString()) && !TextUtils.isEmpty(edOpenNum.getText().toString())) {
-                tvTip.setVisibility(View.VISIBLE);
+                if (mode == MODE_FIRST_CREATE_NORMAL || mode == MODE_MODIFY_NORMAL) {
+                    tvTip.setVisibility(View.VISIBLE);
+                }
             } else {
                 tvTip.setVisibility(View.GONE);
                 return;
@@ -211,11 +177,11 @@ public class StopLossAlertDialog {
             double openNum = TextUtils.isEmpty(edOpenNum.getText().toString()) ? 0 : Double.parseDouble(edOpenNum.getText().toString());
 
             switch (mode) {
-                case MODE_FRIST_CREATE: {
+                case MODE_FIRST_CREATE_NORMAL: {
                     doWithFirstCreateByMode(stopPrice, openPrice, openNum);
                     break;
                 }
-                case MODE_ONLY_MOVE_STOP: {
+                case MODE_MODIFY_NORMAL: {
                     stopMoney = (openPrice - stopPrice) * openNum * 100;
                     double originStopMoney = (bondsDataBean.getOpenPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
                     stopMoney = stopMoney - originStopMoney;
@@ -254,34 +220,6 @@ public class StopLossAlertDialog {
                     }
                     break;
                 }
-                case MODE_MIN_AMOUNT: {
-                    double minAmountPrice = TextUtils.isEmpty(edAddOrMinNumPrice.getText()) ? 0 : Double.parseDouble(edAddOrMinNumPrice.getText().toString());
-                    double minAmountNum = TextUtils.isEmpty(edAddOrMinNumAmount.getText()) ? 0 : Double.parseDouble(edAddOrMinNumAmount.getText().toString());
-
-                    if (minAmountPrice == 0 || minAmountNum == 0) return;
-                    double costPrice = (openPrice * openNum - minAmountPrice * minAmountNum) * 100 / ((openNum - minAmountNum) * 100);
-                    String tip = String.format(context.getResources().getString(R.string.min_amount_tip),
-                            StockXUtils.twoDeic(costPrice)
-                    );
-                    setTextViewText(false, tip);
-                    canAdd2DB = true;
-                    break;
-                }
-                case MODE_ADD_AMOUNT: {
-                    double addAmountPrice = TextUtils.isEmpty(edAddOrMinNumPrice.getText()) ? 0 : Double.parseDouble(edAddOrMinNumPrice.getText().toString());
-                    double addAmountNum = TextUtils.isEmpty(edAddOrMinNumAmount.getText()) ? 0 : Double.parseDouble(edAddOrMinNumAmount.getText().toString());
-
-                    if (addAmountPrice == 0 || addAmountNum == 0) return;
-
-                    double costPrice = (openPrice * openNum + addAmountPrice * addAmountNum) / (openNum + addAmountNum);
-
-                    String tip = String.format(context.getResources().getString(R.string.add_amount_tip),
-                            StockXUtils.twoDeic(costPrice)
-                    );
-                    setTextViewText(false, tip);
-                    canAdd2DB = true;
-                    break;
-                }
             }
         }
 
@@ -304,7 +242,7 @@ public class StopLossAlertDialog {
                 canAdd2DB = true;
                 setTextViewText(false, getTipString(stopMoney, remainRiskMoney));
             } else {
-                tvTip.setVisibility(View.INVISIBLE);
+                tvTip.setVisibility(View.GONE);
                 canAdd2DB = true;
             }
         }
@@ -328,67 +266,86 @@ public class StopLossAlertDialog {
         }
     }
 
-    public void setCallback(ICallback iCallback) {
-        this.iCallback = iCallback;
+    public void setBondsDataBean(BondsDataBean bondsDataBean) {
+        this.bondsDataBean = bondsDataBean;
+        initViews();
+    }
+
+    public void setPresetBondsDataBean(PresetBondsDataBean presetBondsDataBean) {
+        this.presetBondsDataBean = presetBondsDataBean;
+        initViews();
+    }
+
+    public void setCallbackStopLoss(ICallbackStopLoss iCallbackStopLoss) {
+        this.iCallbackStopLoss = iCallbackStopLoss;
+    }
+
+    public void setCallbackPreset(ICallbackPreset callbackPreset) {
+        this.iCallbackPreset = callbackPreset;
     }
 
     DialogInterface.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
-            if (!myTextChangedListener.canAdd2DB()) {
-                Toast.makeText(context, "超出止损额度，添加失败!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            BondsDataBean bondsDataBean;
-            if (StopLossAlertDialog.this.bondsDataBean != null) {
-                bondsDataBean = StopLossAlertDialog.this.bondsDataBean;
-            } else {
-                bondsDataBean = new BondsDataBean();
-            }
-            bondsDataBean.setAccountId(accountDataBean.getId());
-            bondsDataBean.setStockName(edStockName.getText().toString());
-            bondsDataBean.setStopLossPrice(Double.valueOf(edStopPrice.getText().toString()));
-            double costPrice = 0;
-            int amountNum = 0;
-            //成本价（开仓价）、仓位数量等，与模式，即是否第一次创建、加仓、减仓有关。
-            if (mode == MODE_FRIST_CREATE || mode == MODE_ONLY_MOVE_STOP) {
-                costPrice = Double.valueOf(edOpenPrice.getText().toString());
-                amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
-            } else if (mode == MODE_ADD_AMOUNT) {
-                double addAmountPrice = TextUtils.isEmpty(edAddOrMinNumPrice.getText()) ? 0 : Double.parseDouble(edAddOrMinNumPrice.getText().toString());
-                double addAmountNum = TextUtils.isEmpty(edAddOrMinNumAmount.getText()) ? 0 : Double.parseDouble(edAddOrMinNumAmount.getText().toString());
-
-                if (addAmountPrice == 0 || addAmountNum == 0) {
+            switch (mode) {
+                case MODE_FIRST_CREATE_NORMAL:
+                case MODE_MODIFY_NORMAL: {
+                    if (!myTextChangedListener.canAdd2DB()) {
+                        iCallbackStopLoss.refresh(false, null, null);
+                        return;
+                    }
+                    BondsDataBean bondsDataBean;
+                    if (StopLossAlertDialog.this.bondsDataBean != null) {
+                        bondsDataBean = StopLossAlertDialog.this.bondsDataBean;
+                    } else {
+                        bondsDataBean = new BondsDataBean();
+                    }
+                    bondsDataBean.setAccountId(accountDataBean.getId());
+                    bondsDataBean.setStockName(edStockName.getText().toString());
+                    bondsDataBean.setStopLossPrice(Double.valueOf(edStopPrice.getText().toString()));
+                    double costPrice = 0;
+                    int amountNum = 0;
                     costPrice = Double.valueOf(edOpenPrice.getText().toString());
                     amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
-                } else {
-                    costPrice = (bondsDataBean.getOpenPrice() * bondsDataBean.getBondsNum() + addAmountPrice * addAmountNum * 100)
-                            / (bondsDataBean.getBondsNum() + addAmountNum * 100);
-                    amountNum = (int) (bondsDataBean.getBondsNum() + addAmountNum * 100);
-                }
-            } else if (mode == MODE_MIN_AMOUNT) {
-                double minAmountPrice = TextUtils.isEmpty(edAddOrMinNumPrice.getText()) ? 0 : Double.parseDouble(edAddOrMinNumPrice.getText().toString());
-                double minAmountNum = TextUtils.isEmpty(edAddOrMinNumAmount.getText()) ? 0 : Double.parseDouble(edAddOrMinNumAmount.getText().toString());
+                    bondsDataBean.setOpenPrice(costPrice);
+                    bondsDataBean.setBondsNum(amountNum);
 
-                if (minAmountPrice == 0 || minAmountNum == 0) {
-                    costPrice = Double.valueOf(edOpenPrice.getText().toString());
-                    amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
-                } else {
-                    costPrice = (bondsDataBean.getOpenPrice() * bondsDataBean.getBondsNum() - minAmountPrice * minAmountNum * 100) /
-                            ((bondsDataBean.getBondsNum() - minAmountNum * 100));
-                    amountNum = (int) (bondsDataBean.getBondsNum() - minAmountNum * 100);
+                    accountDataBean.setUsedRiskMoney(accountDataBean.getUsedRiskMoney() + myTextChangedListener.stopMoney);
+                    accountDataBean.setUsedMonthRiskMoney(accountDataBean.getUsedMonthRiskMoney() + myTextChangedListener.stopMoney);
+
+                    iCallbackStopLoss.refresh(myTextChangedListener.canAdd2DB(), accountDataBean, bondsDataBean);
+                    break;
+                }
+                case MODE_MODIFY_PRESET:
+                case MODE_FIRST_CREATE_PRESET: {
+                    PresetBondsDataBean presetBondsDataBean;
+                    if (StopLossAlertDialog.this.presetBondsDataBean != null) {
+                        presetBondsDataBean = StopLossAlertDialog.this.presetBondsDataBean;
+                    } else {
+                        presetBondsDataBean = new PresetBondsDataBean();
+                    }
+                    presetBondsDataBean.setAccountId(accountDataBean.getId());
+                    if (!TextUtils.isEmpty(edStockName.getText().toString())) {
+                        presetBondsDataBean.setStockName(edStockName.getText().toString());
+                    }
+                    if (!TextUtils.isEmpty(edStopPrice.getText().toString())) {
+                        presetBondsDataBean.setStopLossPrice(Double.valueOf(edStopPrice.getText().toString()));
+                    }
+                    if (!TextUtils.isEmpty(edOpenPrice.getText().toString())) {
+                        double costPrice = 0;
+                        costPrice = Double.valueOf(edOpenPrice.getText().toString());
+                        presetBondsDataBean.setOpenPrice(costPrice);
+                    }
+                    if (!TextUtils.isEmpty(edOpenNum.getText().toString())) {
+                        int amountNum = 0;
+                        amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
+                        presetBondsDataBean.setBondsNum(amountNum);
+                    }
+
+                    iCallbackPreset.refresh(presetBondsDataBean);
+                    break;
                 }
             }
-            bondsDataBean.setOpenPrice(costPrice);
-            bondsDataBean.setBondsNum(amountNum);
-
-            accountDataBean.setUsedRiskMoney(accountDataBean.getUsedRiskMoney() + myTextChangedListener.stopMoney);
-            accountDataBean.setUsedMonthRiskMoney(accountDataBean.getUsedMonthRiskMoney() + myTextChangedListener.stopMoney);
-
-            DaoManager.getInstance().getDaoSession().getAccountDataBeanDao().insertOrReplace(accountDataBean);
-            DaoManager.getInstance().getDaoSession().getBondsDataBeanDao().insertOrReplace(bondsDataBean);
-
-            iCallback.refresh(accountDataBean);
         }
     };
 }

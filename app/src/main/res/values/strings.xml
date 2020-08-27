@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">StockX</string>
-    <string name="current_amount">当前权益: %s</string>
+    <string name="current_amount">当&#160;前&#160;权&#160;益:&#160;&#160;%s</string>
     <string name="current_risk">当前风险度: %s %% (S) | %s %% (M)</string>
-    <string name="total_risk_amount">总计风险额: %s(S) | %s(M)</string>
+    <string name="total_risk_amount">总计风险额: %s (S) | %s (M)</string>
     <string name="remain_risk_amount">剩余风险额: %s (S) | %s (M)</string>
     <string name="used_risk_amount">已用风险额: %s (S) | %s (M)</string>
 

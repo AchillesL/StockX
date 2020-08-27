@@ -99,6 +99,16 @@
             android:text="更新"
             android:textColor="@android:color/holo_blue_dark"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_cost_price_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toLeftOf="@id/tv_cost_price_update"
+            android:text="保存"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="14sp" />
     </RelativeLayout>
 
 </LinearLayout>

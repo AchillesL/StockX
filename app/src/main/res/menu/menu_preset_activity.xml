@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_add_2_stop"
+        android:title="保存到止损单"
+        app:showAsAction="always" />
+
+    <item android:title="清除">
+        <menu>
+            <item
+                android:id="@+id/menu_clear_invalid"
+                android:title="清除无效预备单" />
+            <item
+                android:id="@+id/menu_clear_all"
+                android:title="清除所有预备单" />
+        </menu>
+    </item>
+</menu>

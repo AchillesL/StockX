@@ -6,9 +6,9 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.util.Log;
 
 import org.greenrobot.greendao.AbstractDaoMaster;
-import org.greenrobot.greendao.database.StandardDatabase;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseOpenHelper;
+import org.greenrobot.greendao.database.StandardDatabase;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 
 
@@ -23,6 +23,7 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(Database db, boolean ifNotExists) {
         AccountDataBeanDao.createTable(db, ifNotExists);
         BondsDataBeanDao.createTable(db, ifNotExists);
+        PresetBondsDataBeanDao.createTable(db, ifNotExists);
         SettingBeanDao.createTable(db, ifNotExists);
     }
 
@@ -30,6 +31,7 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void dropAllTables(Database db, boolean ifExists) {
         AccountDataBeanDao.dropTable(db, ifExists);
         BondsDataBeanDao.dropTable(db, ifExists);
+        PresetBondsDataBeanDao.dropTable(db, ifExists);
         SettingBeanDao.dropTable(db, ifExists);
     }
 
@@ -51,6 +53,7 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(AccountDataBeanDao.class);
         registerDaoClass(BondsDataBeanDao.class);
+        registerDaoClass(PresetBondsDataBeanDao.class);
         registerDaoClass(SettingBeanDao.class);
     }
 

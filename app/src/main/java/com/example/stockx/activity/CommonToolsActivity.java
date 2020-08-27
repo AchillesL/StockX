@@ -1,17 +1,26 @@
 package com.example.stockx.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.greendao.DaoManager;
 import com.example.stockx.R;
+import com.example.stockx.bean.AccountDataBean;
+import com.example.stockx.bean.BondsDataBean;
 import com.example.stockx.utils.StockXUtils;
+import com.example.stockx.view.CommonAlertDialog;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class CommonToolsActivity extends AppCompatActivity {
@@ -24,6 +33,15 @@ public class CommonToolsActivity extends AppCompatActivity {
     private TextView tvCostPriceTip;
     private TextView tvCostPriceUpdate;
     private TextView tvCostPriceClear;
+    private TextView tvCostPriceSave;
+
+    //网格交易计算
+    private TextInputEditText edGridTradeBasePrice;
+    private RadioButton rbGridTrade35;
+    private RadioButton rbGridTrade55;
+    private RadioButton rbGridTrade88;
+    private TextView tvGridTradeTip;
+    private TextView tvGridTradeClear;
 
     //百分比计算
     private TextInputEditText edPer2PricePrice;
@@ -44,6 +62,8 @@ public class CommonToolsActivity extends AppCompatActivity {
     private TextView tvStopLossTip;
     private TextView tvStopLossClear;
 
+    long bondsDataId = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +82,14 @@ public class CommonToolsActivity extends AppCompatActivity {
         tvCostPriceTip = (TextView) findViewById(R.id.tv_cost_price_tip);
         tvCostPriceUpdate = (TextView) findViewById(R.id.tv_cost_price_update);
         tvCostPriceClear = (TextView) findViewById(R.id.tv_cost_price_clear);
+        tvCostPriceSave = (TextView) findViewById(R.id.tv_cost_price_save);
+
+        edGridTradeBasePrice = (TextInputEditText) findViewById(R.id.ed_grid_trade_base_price);
+        rbGridTrade35 = (RadioButton) findViewById(R.id.rb_grid_trade_3_5);
+        rbGridTrade55 = (RadioButton) findViewById(R.id.rb_grid_trade_5_5);
+        rbGridTrade88 = (RadioButton) findViewById(R.id.rb_grid_trade_8_8);
+        tvGridTradeTip = (TextView) findViewById(R.id.tv_grid_trade_tip);
+        tvGridTradeClear = (TextView) findViewById(R.id.tv_grid_trade_clear);
 
         edPer2PricePrice = (TextInputEditText) findViewById(R.id.ed_per_2_price_price);
         edPer2PricePer = (TextInputEditText) findViewById(R.id.ed_per_2_price_per);
@@ -81,6 +109,8 @@ public class CommonToolsActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        //加仓成本价计算
+        final CostPriceTextWatcher costPriceTextWatcher = new CostPriceTextWatcher();
         edCurrentCostPrice.addTextChangedListener(costPriceTextWatcher);
         edCurrentAmount.addTextChangedListener(costPriceTextWatcher);
         edAddOpenPrice.addTextChangedListener(costPriceTextWatcher);
@@ -89,12 +119,14 @@ public class CommonToolsActivity extends AppCompatActivity {
         if (getIntent() != null) {
             double costprice = getIntent().getDoubleExtra("OPEN_PRICE", 0);
             double amount = getIntent().getIntExtra("OPEN_AMOUNT", 0) / 100.0;
+            bondsDataId = getIntent().getLongExtra("BOND_DATA_ID", -1);
             if (costprice != 0 && amount != 0) {
                 edCurrentCostPrice.setText(StockXUtils.twoDeic(costprice));
                 edCurrentAmount.setText(StockXUtils.twoDeic(amount));
                 edAddOpenPrice.requestFocus();
             }
         }
+
         tvCostPriceUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,7 +153,103 @@ public class CommonToolsActivity extends AppCompatActivity {
                 edCurrentCostPrice.requestFocus();
             }
         });
+        tvCostPriceSave.setVisibility(View.GONE);
+        tvCostPriceSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = LayoutInflater.from(CommonToolsActivity.this).inflate(R.layout.view_add_amount_save_dialog, null);
+                final TextInputEditText edCostPrice = view.findViewById(R.id.ed_cost_price);
+                final TextInputEditText edStopPrice = view.findViewById(R.id.ed_stop_price);
+                RadioButton rbBreakEven = view.findViewById(R.id.rb_break_even);
+                RadioButton rbBreakEven1 = view.findViewById(R.id.rb_break_even_1);
 
+                edCostPrice.setText(StockXUtils.twoDeic(costPriceTextWatcher.costPrice));
+                edStopPrice.setText(StockXUtils.twoDeic(costPriceTextWatcher.costPrice));
+                rbBreakEven.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (!isChecked) return;
+                        edStopPrice.setText(StockXUtils.twoDeic(Double.parseDouble(edCostPrice.getText().toString())));
+                    }
+                });
+                rbBreakEven1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (!isChecked) return;
+                        double costPrice = Double.parseDouble(edCostPrice.getText().toString());
+                        edStopPrice.setText(StockXUtils.twoDeic(costPrice + costPrice * 0.01));
+                    }
+                });
+
+                rbBreakEven.setChecked(true);
+                CommonAlertDialog commonAlertDialog = new CommonAlertDialog(CommonToolsActivity.this, "加仓保存", null, view, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        double costPrice = Double.parseDouble(edCostPrice.getText().toString());
+                        double stopPrice = Double.parseDouble(edStopPrice.getText().toString());
+                        if (stopPrice < costPrice) {
+                            Toast.makeText(CommonToolsActivity.this, "保存失败，加仓必须保本!", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        BondsDataBean bondsDataBean = DaoManager.getInstance().getDaoSession().getBondsDataBeanDao().load(bondsDataId);
+                        if (bondsDataBean != null) {
+                            if (bondsDataBean.getOpenPrice() > bondsDataBean.getStopLossPrice()) {
+                                double stopMoney = (bondsDataBean.getOpenPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
+                                AccountDataBean accountDataBean = DaoManager.getInstance().getDaoSession().getAccountDataBeanDao().load(bondsDataBean.getAccountId());
+                                accountDataBean.setUsedRiskMoney(accountDataBean.getUsedRiskMoney() - stopMoney);
+                                accountDataBean.setUsedMonthRiskMoney(accountDataBean.getUsedMonthRiskMoney() - stopMoney);
+                                DaoManager.getInstance().getDaoSession().getAccountDataBeanDao().insertOrReplaceInTx(accountDataBean);
+                            }
+                            bondsDataBean.setOpenPrice(costPrice);
+                            bondsDataBean.setStopLossPrice(stopPrice);
+                            bondsDataBean.setBondsNum((int) (costPriceTextWatcher.amount * 100));
+                            DaoManager.getInstance().getDaoSession().getBondsDataBeanDao().insertOrReplace(bondsDataBean);
+
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    }
+                });
+                commonAlertDialog.show();
+            }
+        });
+
+        //网格交易计算
+        final GridTradeWatcher gridTradeWatcher = new GridTradeWatcher();
+        rbGridTrade35.setChecked(true);
+        rbGridTrade35.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) return;
+                gridTradeWatcher.setRatio(3, 5);
+            }
+        });
+        rbGridTrade55.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) return;
+                gridTradeWatcher.setRatio(5, 5);
+            }
+        });
+        rbGridTrade88.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) return;
+                gridTradeWatcher.setRatio(8, 10);
+            }
+        });
+        edGridTradeBasePrice.addTextChangedListener(gridTradeWatcher);
+        tvGridTradeClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edGridTradeBasePrice.setText("");
+                edGridTradeBasePrice.requestFocus();
+                rbGridTrade35.setChecked(true);
+                tvGridTradeTip.setText("");
+            }
+        });
+
+        //百分比转价格
         edPer2PricePrice.addTextChangedListener(per2PriceTextWatcher);
         edPer2PricePer.addTextChangedListener(per2PriceTextWatcher);
         tvPer2PriceClear.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +261,7 @@ public class CommonToolsActivity extends AppCompatActivity {
             }
         });
 
+        //价格转百分比
         edPrice2PerFirstPrice.addTextChangedListener(price2PerTextWatcher);
         edPrice2PerSecondPrice.addTextChangedListener(price2PerTextWatcher);
         tvPrice2PerClear.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +273,7 @@ public class CommonToolsActivity extends AppCompatActivity {
             }
         });
 
+        //止盈止损金额计算
         edStopLossCostPrice.addTextChangedListener(stoplossTextWatcher);
         edStopLossStopPrice.addTextChangedListener(stoplossTextWatcher);
         edStopLossAmount.addTextChangedListener(stoplossTextWatcher);
@@ -158,19 +288,23 @@ public class CommonToolsActivity extends AppCompatActivity {
         });
     }
 
-    TextWatcher costPriceTextWatcher = new TextWatcher() {
+    class CostPriceTextWatcher implements TextWatcher {
+
+        double costPrice;
+        double amount;
+
         @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
         }
 
         @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
 
         }
 
         @Override
-        public void afterTextChanged(Editable editable) {
+        public void afterTextChanged(Editable s) {
             String curCostPriceStr = edCurrentCostPrice.getText().toString();
             String curAmountStr = edCurrentAmount.getText().toString();
             String curAddOpenPriceStr = edAddOpenPrice.getText().toString();
@@ -178,9 +312,15 @@ public class CommonToolsActivity extends AppCompatActivity {
 
             if (TextUtils.isEmpty(curCostPriceStr) || TextUtils.isEmpty(curAmountStr) || TextUtils.isEmpty(curAddOpenPriceStr) || TextUtils.isEmpty(curAddAmountStr)) {
                 tvCostPriceTip.setVisibility(View.INVISIBLE);
+                if (bondsDataId != -1) {
+                    tvCostPriceSave.setVisibility(View.INVISIBLE);
+                }
                 return;
             } else {
                 tvCostPriceTip.setVisibility(View.VISIBLE);
+                if (bondsDataId != -1) {
+                    tvCostPriceSave.setVisibility(View.VISIBLE);
+                }
             }
 
             double curCostPrice = Double.parseDouble(curCostPriceStr);
@@ -191,6 +331,8 @@ public class CommonToolsActivity extends AppCompatActivity {
             double costPrice = (curCostPrice * curAmount + curAddOpenPrice * curAddAmount) / (curAmount + curAddAmount);
             double sum = costPrice * (curAddAmount + curAmount) * 100 + (curAddOpenPrice - curCostPrice) * curAmount * 100;
             double distance = (curAddOpenPrice - costPrice) / curAddOpenPrice * 100.0;
+            this.costPrice = costPrice;
+            this.amount = curAddAmount + curAmount;
             tvCostPriceTip.setTag(R.id.tag_cost_price, costPrice);
             tvCostPriceTip.setTag(R.id.tag_amount, curAmount + curAddAmount);
             tvCostPriceTip.setText(
@@ -199,7 +341,41 @@ public class CommonToolsActivity extends AppCompatActivity {
                             + "\n加仓后, 现价到成本价的距离是:  " + StockXUtils.twoDeic(distance) + "%")
             ;
         }
-    };
+    }
+
+    class GridTradeWatcher implements TextWatcher {
+        int downRatio = 3;
+        int upRatio = 5;
+
+        public void setRatio(int downRatio, int upRatio) {
+            this.downRatio = downRatio;
+            this.upRatio = upRatio;
+            afterTextChanged(edGridTradeBasePrice.getEditableText());
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (TextUtils.isEmpty(s.toString())) {
+                return;
+            }
+            if (!rbGridTrade35.isChecked() && !rbGridTrade55.isChecked() && !rbGridTrade88.isChecked())
+                return;
+            double price = Double.parseDouble(s.toString());
+            String tip = "价格上沿是: " + StockXUtils.twoDeic(price + upRatio * price / 100) + " 元\n"
+                    + "价格下沿是: " + StockXUtils.twoDeic(price - downRatio * price / 100) + " 元\n";
+            tvGridTradeTip.setText(tip);
+        }
+    }
 
     TextWatcher per2PriceTextWatcher = new TextWatcher() {
         @Override

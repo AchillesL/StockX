@@ -54,7 +54,7 @@ public class ListViewHeader {
 
     public void initView(final AccountDataBean accountDataBean) {
         mTvAccountName.setText(accountDataBean.getAcountName());
-        mTvAccountAmount.setText(String.format(mContext.getResources().getString(R.string.current_amount), StockXUtils.twoDeic(accountDataBean.getCurrentMoney())));
+        mTvAccountAmount.setText(String.format(mContext.getResources().getString(R.string.current_amount), StockXUtils.intDeic(accountDataBean.getCurrentMoney())));
 
         mIvAccountAmount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,32 +77,30 @@ public class ListViewHeader {
             }
         });
         mTvCurrentRisk.setText(String.format(mContext.getResources().getString(R.string.current_risk),
-                StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100),
-                StockXUtils.twoDeic(accountDataBean.getUsedMonthRiskMoney() / accountDataBean.getTotalMonthRiskMoney() * 100)));
+                StockXUtils.intDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100),
+                StockXUtils.intDeic(accountDataBean.getUsedMonthRiskMoney() / accountDataBean.getTotalMonthRiskMoney() * 100)));
 
         mTvTotalRiskAmount.setText(String.format(mContext.getResources().getString(R.string.total_risk_amount),
-                StockXUtils.twoDeic(accountDataBean.getTotalRiskMoney()),
-                StockXUtils.twoDeic(accountDataBean.getTotalMonthRiskMoney())
+                StockXUtils.intDeic(accountDataBean.getTotalRiskMoney()),
+                StockXUtils.intDeic(accountDataBean.getTotalMonthRiskMoney())
         ));
         mTvRemainRiskAmount.setText(String.format(mContext.getResources().getString(R.string.remain_risk_amount),
-                StockXUtils.twoDeic(accountDataBean.getTotalRiskMoney() - accountDataBean.getUsedRiskMoney()),
-                StockXUtils.twoDeic(accountDataBean.getTotalMonthRiskMoney() - accountDataBean.getUsedMonthRiskMoney())
+                StockXUtils.intDeic(accountDataBean.getTotalRiskMoney() - accountDataBean.getUsedRiskMoney()),
+                StockXUtils.intDeic(accountDataBean.getTotalMonthRiskMoney() - accountDataBean.getUsedMonthRiskMoney())
         ));
         mTvUsedRiskAmount.setText(String.format(mContext.getResources().getString(R.string.used_risk_amount),
-                StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney()),
-                StockXUtils.twoDeic(accountDataBean.getUsedMonthRiskMoney())
+                StockXUtils.intDeic(accountDataBean.getUsedRiskMoney()),
+                StockXUtils.intDeic(accountDataBean.getUsedMonthRiskMoney())
         ));
 
         int stockNum = 0;
         int winStockNum = 0;
-        List<BondsDataBean> bondsDataBeans = DaoManager.getInstance().getDaoSession().getBondsDataBeanDao().loadAll();
+        List<BondsDataBean> bondsDataBeans = DaoManager.getInstance().getDaoSession().getBondsDataBeanDao().queryRaw("where ACCOUNT_ID = ?", String.valueOf(accountDataBean.getId()));
         for (int i = 0; i < bondsDataBeans.size(); i++) {
             BondsDataBean bondsDataBean = bondsDataBeans.get(i);
-            if (bondsDataBean.getAccountId() == accountDataBean.getId()) {
-                stockNum++;
-                if (bondsDataBean.getStopLossPrice() >= bondsDataBean.getOpenPrice()) {
-                    winStockNum++;
-                }
+            stockNum++;
+            if (bondsDataBean.getStopLossPrice() >= bondsDataBean.getOpenPrice()) {
+                winStockNum++;
             }
         }
         String status = "目前账户持有:  " + stockNum + "  只股票,  其中无风险共有: " + winStockNum + " 只。";

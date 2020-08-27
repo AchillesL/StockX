@@ -4,8 +4,10 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.util.Objects;
+
 @Entity
-public class BondsDataBean extends AbsBondsDataBean {
+public class PresetBondsDataBean extends AbsBondsDataBean {
     @Id(autoincrement = true)
     private Long id;
     //账户的Id
@@ -14,14 +16,14 @@ public class BondsDataBean extends AbsBondsDataBean {
     private String stockName;
     //开仓价格
     private double openPrice;
-    //止损价格，包括移动止损
+    //止损价格
     private double stopLossPrice;
     //持仓数量(单位：股)
     private int bondsNum;
 
-    @Generated(hash = 2106638465)
-    public BondsDataBean(Long id, Long accountId, String stockName,
-                         double openPrice, double stopLossPrice, int bondsNum) {
+    @Generated(hash = 1034386014)
+    public PresetBondsDataBean(Long id, Long accountId, String stockName,
+                               double openPrice, double stopLossPrice, int bondsNum) {
         this.id = id;
         this.accountId = accountId;
         this.stockName = stockName;
@@ -30,8 +32,8 @@ public class BondsDataBean extends AbsBondsDataBean {
         this.bondsNum = bondsNum;
     }
 
-    @Generated(hash = 954192400)
-    public BondsDataBean() {
+    @Generated(hash = 1492017533)
+    public PresetBondsDataBean() {
     }
 
     public Long getId() {
@@ -40,6 +42,14 @@ public class BondsDataBean extends AbsBondsDataBean {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getAccountId() {
+        return this.accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
     public String getStockName() {
@@ -74,12 +84,21 @@ public class BondsDataBean extends AbsBondsDataBean {
         this.bondsNum = bondsNum;
     }
 
-    public Long getAccountId() {
-        return this.accountId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PresetBondsDataBean that = (PresetBondsDataBean) o;
+        return Double.compare(that.openPrice, openPrice) == 0 &&
+                Double.compare(that.stopLossPrice, stopLossPrice) == 0 &&
+                bondsNum == that.bondsNum &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(accountId, that.accountId) &&
+                Objects.equals(stockName, that.stockName);
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, accountId, stockName, openPrice, stopLossPrice, bondsNum);
     }
-
 }

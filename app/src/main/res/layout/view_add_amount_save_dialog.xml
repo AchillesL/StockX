@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="15dp">
 
@@ -10,10 +10,12 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ed_add_account_name"
+            android:id="@+id/ed_cost_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="账户名称" />
+            android:inputType="numberDecimal"
+            android:hint="成本价"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -21,46 +23,35 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ed_add_account_amount"
+            android:id="@+id/ed_stop_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="账户权益" />
+            android:hint="止损价"
+            android:inputType="numberDecimal"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        style="@style/textSize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="选择风险系数(月风险系数是该系数的3倍): " />
 
     <RadioGroup
         android:layout_width="match_parent"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
 
         <RadioButton
-            android:id="@+id/rb_ratio_1"
+            android:id="@+id/rb_break_even"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:checked="true"
-            android:text="1%"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:text="保本止损" />
 
         <RadioButton
-            android:id="@+id/rb_ratio_2"
-            android:text="2%"
-            android:layout_weight="1"
+            android:id="@+id/rb_break_even_1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="保本止损 +1%" />
 
-        <RadioButton
-            android:id="@+id/rb_ratio_3"
-            android:text="2.88%"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </RadioGroup>
 
 </LinearLayout>

@@ -38,7 +38,9 @@ public class MemoActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SharePreferenceUtils.putString(this, MEMO_KEY, edMemo.getText().toString());
-        Toast.makeText(this, "备忘已保存!", Toast.LENGTH_SHORT).show();
+        if (!TextUtils.isEmpty(edMemo.getText().toString())) {
+            SharePreferenceUtils.putString(this, MEMO_KEY, edMemo.getText().toString());
+            Toast.makeText(this, "备忘已保存!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
