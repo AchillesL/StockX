@@ -25,7 +25,7 @@ public class ListBaseAdapter extends BaseAdapter {
     public interface ICallbackStopLoss {
         public void modify(AbsBondsDataBean absBondsDataBean);
 
-        public void delete(final double openPrice, final double stopPrice, AbsBondsDataBean absBondsDataBean);
+        public void delete(final double costPrice, final double stopPrice, AbsBondsDataBean absBondsDataBean);
     }
 
     public interface ICallbackPreStopLoss {
@@ -47,8 +47,8 @@ public class ListBaseAdapter extends BaseAdapter {
         Collections.sort(bondsDataBeans, new Comparator<AbsBondsDataBean>() {
             @Override
             public int compare(AbsBondsDataBean b1, AbsBondsDataBean b2) {
-                double b1StopMoney = (b1.getStopLossPrice() - b1.getOpenPrice()) * b1.getBondsNum();
-                double b2StopMoney = (b2.getStopLossPrice() - b2.getOpenPrice()) * b2.getBondsNum();
+                double b1StopMoney = (b1.getStopLossPrice() - b1.getCostPrice()) * b1.getBondsNum();
+                double b2StopMoney = (b2.getStopLossPrice() - b2.getCostPrice()) * b2.getBondsNum();
                 return b1StopMoney > b2StopMoney ? -1 : 1;
             }
         });
@@ -86,24 +86,25 @@ public class ListBaseAdapter extends BaseAdapter {
 
         TextView tvStockName = (TextView) view.findViewById(R.id.tv_stock_name);
         ImageView ivSafeIcon = (ImageView) view.findViewById(R.id.iv_safe_icon);
-        TextView tvOpenPrice = (TextView) view.findViewById(R.id.tv_open_price);
+        TextView tvCostPrice = (TextView) view.findViewById(R.id.tv_open_price);
         TextView tvStopPrice = (TextView) view.findViewById(R.id.tv_stop_price);
         TextView tvOpenNum = (TextView) view.findViewById(R.id.tv_open_num);
         TextView tvStopWinMoney = (TextView) view.findViewById(R.id.tv_stop_win_money);
         TextView tvRiskPercent = (TextView) view.findViewById(R.id.tv_risk_percent);
+        TextView tvTargePrice = (TextView) view.findViewById(R.id.tv_target_price);
         ImageView ivModify = (ImageView) view.findViewById(R.id.iv_modify);
         ImageView ivDelete = (ImageView) view.findViewById(R.id.iv_delete);
 
         tvStockName.setText(absBondsDataBean.getStockName());
 
-        final double openPrice = absBondsDataBean.getOpenPrice();
+        final double costPrice = absBondsDataBean.getCostPrice();
         final double stopPrice = absBondsDataBean.getStopLossPrice();
-        tvOpenPrice.setText(String.format(mContext.getResources().getString(R.string.open_price), StockXUtils.twoDeic(openPrice)));
+        tvCostPrice.setText(String.format(mContext.getResources().getString(R.string.cost_price), StockXUtils.twoDeic(costPrice)));
         tvStopPrice.setText(String.format(mContext.getResources().getString(R.string.stop_price), StockXUtils.twoDeic(stopPrice)));
 
-        double stopOrWinMoney = Math.abs(openPrice - stopPrice) * absBondsDataBean.getBondsNum();
+        double stopOrWinMoney = Math.abs(costPrice - stopPrice) * absBondsDataBean.getBondsNum();
         if (absBondsDataBean instanceof BondsDataBean) {
-            if (stopPrice >= openPrice) {
+            if (stopPrice >= costPrice) {
                 ivSafeIcon.setVisibility(View.VISIBLE);
                 tvStopWinMoney.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
                 tvStopWinMoney.setText(String.format(mContext.getResources().getString(R.string.win_money), StockXUtils.intDeic(stopOrWinMoney)));
@@ -122,13 +123,19 @@ public class ListBaseAdapter extends BaseAdapter {
             tvStopWinMoney.setTextColor(mContext.getResources().getColor(android.R.color.holo_blue_dark));
         }
 
-        double riskPercent = stopPrice >= openPrice ? 0 : (openPrice - stopPrice) * absBondsDataBean.getBondsNum() / mAccountDataBean.getTotalRiskMoney() * 100.0;
+        double riskPercent = stopPrice >= costPrice ? 0 : (costPrice - stopPrice) * absBondsDataBean.getBondsNum() / mAccountDataBean.getTotalRiskMoney() * 100.0;
         if (absBondsDataBean instanceof BondsDataBean) {
             tvRiskPercent.setText(String.format(mContext.getResources().getString(R.string.risk_percent), StockXUtils.twoDeic(riskPercent)));
             tvRiskPercent.setVisibility(View.VISIBLE);
         } else {
             tvRiskPercent.setVisibility(View.GONE);
         }
+        if (Double.compare(absBondsDataBean.getTargetPrice(), 0) == 0) {
+            tvTargePrice.setText(String.format(mContext.getResources().getString(R.string.target_price), "无"));
+        } else {
+            tvTargePrice.setText(String.format(mContext.getResources().getString(R.string.target_price), StockXUtils.twoDeic(absBondsDataBean.getTargetPrice())));
+        }
+
         tvOpenNum.setText(String.format(mContext.getResources().getString(R.string.open_num), absBondsDataBean.getBondsNum()));
 
         ivModify.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +154,7 @@ public class ListBaseAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 if (mICallbackStopLoss != null) {
-                    mICallbackStopLoss.delete(openPrice, stopPrice, absBondsDataBean);
+                    mICallbackStopLoss.delete(costPrice, stopPrice, absBondsDataBean);
                 }
                 if (mICallbackPreStopLoss != null) {
                     mICallbackPreStopLoss.delete(absBondsDataBean);

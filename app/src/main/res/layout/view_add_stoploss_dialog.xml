@@ -100,6 +100,45 @@
                 android:text="+10" />
 
         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_targe_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="目标价(选填)"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_calc_target_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.125"
+            android:gravity="center"
+            android:text="计算"
+            android:textColor="@android:color/holo_blue_dark" />
+
+        <TextView
+            android:id="@+id/tv_clear_target_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.125"
+            android:gravity="center"
+            android:text="清空"
+            android:textColor="@android:color/holo_blue_dark" />
     </LinearLayout>
 
     <TextView

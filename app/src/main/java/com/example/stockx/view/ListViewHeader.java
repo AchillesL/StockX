@@ -99,7 +99,7 @@ public class ListViewHeader {
         for (int i = 0; i < bondsDataBeans.size(); i++) {
             BondsDataBean bondsDataBean = bondsDataBeans.get(i);
             stockNum++;
-            if (bondsDataBean.getStopLossPrice() >= bondsDataBean.getOpenPrice()) {
+            if (bondsDataBean.getStopLossPrice() >= bondsDataBean.getCostPrice()) {
                 winStockNum++;
             }
         }

@@ -193,14 +193,14 @@ public class CommonToolsActivity extends AppCompatActivity {
                         }
                         BondsDataBean bondsDataBean = DaoManager.getInstance().getDaoSession().getBondsDataBeanDao().load(bondsDataId);
                         if (bondsDataBean != null) {
-                            if (bondsDataBean.getOpenPrice() > bondsDataBean.getStopLossPrice()) {
-                                double stopMoney = (bondsDataBean.getOpenPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
+                            if (bondsDataBean.getCostPrice() > bondsDataBean.getStopLossPrice()) {
+                                double stopMoney = (bondsDataBean.getCostPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
                                 AccountDataBean accountDataBean = DaoManager.getInstance().getDaoSession().getAccountDataBeanDao().load(bondsDataBean.getAccountId());
                                 accountDataBean.setUsedRiskMoney(accountDataBean.getUsedRiskMoney() - stopMoney);
                                 accountDataBean.setUsedMonthRiskMoney(accountDataBean.getUsedMonthRiskMoney() - stopMoney);
                                 DaoManager.getInstance().getDaoSession().getAccountDataBeanDao().insertOrReplaceInTx(accountDataBean);
                             }
-                            bondsDataBean.setOpenPrice(costPrice);
+                            bondsDataBean.setCostPrice(costPrice);
                             bondsDataBean.setStopLossPrice(stopPrice);
                             bondsDataBean.setBondsNum((int) (costPriceTextWatcher.amount * 100));
                             DaoManager.getInstance().getDaoSession().getBondsDataBeanDao().insertOrReplace(bondsDataBean);

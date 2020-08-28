@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.stockx.R;
@@ -24,11 +26,14 @@ public class StopLossAlertDialog {
 
     private TextInputEditText edStockName;
     private TextInputEditText edStopPrice;
-    private TextInputEditText edOpenPrice;
+    private TextInputEditText edCostPrice;
     private TextInputEditText edOpenNum;
     private TextView tvOpenNumAddOne;
     private TextView tvOpenNumMinOne;
     private TextView tvOpenNumAddTen;
+    private TextInputEditText edTargePrice;
+    private TextView tvCalcTargePrice;
+    private TextView tvClearTargePrice;
     private TextView tvTip;
 
     private AbsBondsDataBean absBondsDataBean;
@@ -44,7 +49,7 @@ public class StopLossAlertDialog {
     private AccountDataBean accountDataBean;
 
     public interface ICallbackStopLoss {
-        public void refresh(boolean canAdd2DB, AccountDataBean accountDataBean, BondsDataBean bondsDataBean);
+        public void refresh(boolean canAdd2DB, String msg, AccountDataBean accountDataBean, BondsDataBean bondsDataBean);
     }
 
     public interface ICallbackPreset {
@@ -84,29 +89,133 @@ public class StopLossAlertDialog {
     private void findViews(View rootView) {
         edStockName = (TextInputEditText) rootView.findViewById(R.id.ed_stock_name);
         edStopPrice = (TextInputEditText) rootView.findViewById(R.id.ed_stop_price);
-        edOpenPrice = (TextInputEditText) rootView.findViewById(R.id.ed_open_price);
+        edCostPrice = (TextInputEditText) rootView.findViewById(R.id.ed_open_price);
         edOpenNum = (TextInputEditText) rootView.findViewById(R.id.ed_open_num);
         tvOpenNumAddOne = (TextView) rootView.findViewById(R.id.tv_open_num_add_one);
         tvOpenNumMinOne = (TextView) rootView.findViewById(R.id.tv_open_num_min_one);
         tvOpenNumAddTen = (TextView) rootView.findViewById(R.id.tv_open_num_add_ten);
+        edTargePrice = (TextInputEditText) rootView.findViewById(R.id.ed_targe_price);
+        tvCalcTargePrice = (TextView) rootView.findViewById(R.id.tv_calc_target_price);
+        tvClearTargePrice = (TextView) rootView.findViewById(R.id.tv_clear_target_price);
         tvTip = (TextView) rootView.findViewById(R.id.tvTip);
     }
-
 
     private void initViews() {
         if (mode == MODE_MODIFY_NORMAL || mode == MODE_MODIFY_PRESET) {
             edStockName.setText(absBondsDataBean.getStockName());
-            edOpenPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getOpenPrice()));
+            edCostPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getCostPrice()));
             edStopPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getStopLossPrice()));
             edOpenNum.setText(String.valueOf(absBondsDataBean.getBondsNum() / 100.0));
             edOpenNum.requestFocus();
             edOpenNum.setSelection(edOpenNum.getText().toString().length());
+
+            if (Double.compare(absBondsDataBean.getTargetPrice(), 0) == 0) {
+                edTargePrice.setText("");
+            } else {
+                edTargePrice.setText(StockXUtils.twoDeic(absBondsDataBean.getTargetPrice()));
+            }
         }
 
         myTextChangedListener = new MyTextChangedListener(accountDataBean);
         edStopPrice.addTextChangedListener(myTextChangedListener);
-        edOpenPrice.addTextChangedListener(myTextChangedListener);
+        edCostPrice.addTextChangedListener(myTextChangedListener);
         edOpenNum.addTextChangedListener(myTextChangedListener);
+        edTargePrice.addTextChangedListener(myTextChangedListener);
+
+        tvCalcTargePrice.setOnClickListener(new View.OnClickListener() {
+            View view;
+            TextInputEditText edHighPrice;
+            TextInputEditText edLowPrice;
+            TextView tvTip;
+            RadioButton rbRatio1;
+            RadioButton rbRatio2;
+            MyTextWather myTextWather;
+
+
+            @Override
+            public void onClick(View v) {
+                final MyTextWather myTextWather = new MyTextWather();
+                view = LayoutInflater.from(context).inflate(R.layout.view_calc_target_price_dialog, null);
+                edHighPrice = (TextInputEditText) view.findViewById(R.id.ed_high_price);
+                edLowPrice = (TextInputEditText) view.findViewById(R.id.ed_low_price);
+                tvTip = (TextView) view.findViewById(R.id.tv_tip);
+                rbRatio1 = (RadioButton) view.findViewById(R.id.rb_ratio_1);
+                rbRatio2 = (RadioButton) view.findViewById(R.id.rb_ratio_2);
+                rbRatio1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (!isChecked) return;
+                        tvTip.setText(context.getString(R.string.target_price_2, StockXUtils.twoDeic(myTextWather.basePrice + myTextWather.flowPrice)));
+                    }
+                });
+                rbRatio2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (!isChecked) return;
+                        tvTip.setText(context.getString(R.string.target_price_2, StockXUtils.twoDeic(myTextWather.basePrice + myTextWather.flowPrice * 0.8)));
+                    }
+                });
+                edHighPrice.addTextChangedListener(myTextWather);
+                edLowPrice.addTextChangedListener(myTextWather);
+
+                CommonAlertDialog commonAlertDialog = new CommonAlertDialog(context, "计算目标价", null, view, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (Double.compare(myTextWather.flowPrice, 0) != 0) {
+                            double targetPrice = rbRatio2.isChecked() ?
+                                    (myTextWather.basePrice + myTextWather.flowPrice * 0.8) :
+                                    (myTextWather.basePrice + myTextWather.flowPrice);
+                            edTargePrice.setText(StockXUtils.twoDeic(targetPrice));
+                            edTargePrice.requestFocus();
+                            edTargePrice.setSelection(edTargePrice.getText().toString().length());
+                        }
+                    }
+                });
+                commonAlertDialog.show();
+            }
+
+            class MyTextWather implements TextWatcher {
+
+                double flowPrice;
+                double basePrice;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (!TextUtils.isEmpty(edHighPrice.getText().toString()) && !TextUtils.isEmpty(edLowPrice.getText().toString())) {
+                        tvTip.setVisibility(View.VISIBLE);
+                    } else {
+                        tvTip.setVisibility(View.INVISIBLE);
+                        return;
+                    }
+                    double highPrice = Double.parseDouble(edHighPrice.getText().toString());
+                    this.basePrice = highPrice;
+                    double lowPrice = Double.parseDouble(edLowPrice.getText().toString());
+                    this.flowPrice = highPrice - lowPrice;
+                    if (rbRatio2.isChecked()) {
+                        tvTip.setText(context.getString(R.string.target_price_2, StockXUtils.twoDeic(basePrice + flowPrice * 0.8)));
+                    } else {
+                        tvTip.setText(context.getString(R.string.target_price_2, StockXUtils.twoDeic(basePrice + flowPrice)));
+                    }
+                }
+            }
+        });
+
+        tvClearTargePrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edTargePrice.setText("");
+            }
+        });
 
         tvOpenNumAddOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,7 +272,7 @@ public class StopLossAlertDialog {
 
         @Override
         public void afterTextChanged(Editable editable) {
-            if (!TextUtils.isEmpty(edStopPrice.getText().toString()) && !TextUtils.isEmpty(edOpenPrice.getText().toString()) && !TextUtils.isEmpty(edOpenNum.getText().toString())) {
+            if (!TextUtils.isEmpty(edStopPrice.getText().toString()) && !TextUtils.isEmpty(edCostPrice.getText().toString()) && !TextUtils.isEmpty(edOpenNum.getText().toString())) {
                 if (mode == MODE_FIRST_CREATE_NORMAL || mode == MODE_MODIFY_NORMAL) {
                     tvTip.setVisibility(View.VISIBLE);
                 }
@@ -173,19 +282,19 @@ public class StopLossAlertDialog {
             }
 
             double stopPrice = TextUtils.isEmpty(edStopPrice.getText().toString()) ? 0 : Double.parseDouble(edStopPrice.getText().toString());
-            double openPrice = TextUtils.isEmpty(edOpenPrice.getText().toString()) ? 0 : Double.parseDouble(edOpenPrice.getText().toString());
+            double costPrice = TextUtils.isEmpty(edCostPrice.getText().toString()) ? 0 : Double.parseDouble(edCostPrice.getText().toString());
             double openNum = TextUtils.isEmpty(edOpenNum.getText().toString()) ? 0 : Double.parseDouble(edOpenNum.getText().toString());
 
             switch (mode) {
                 case MODE_FIRST_CREATE_NORMAL: {
-                    doWithFirstCreateByMode(stopPrice, openPrice, openNum);
+                    doWithFirstCreateByMode(stopPrice, costPrice, openNum);
                     break;
                 }
                 case MODE_MODIFY_NORMAL: {
-                    stopMoney = (openPrice - stopPrice) * openNum * 100;
-                    double originStopMoney = (bondsDataBean.getOpenPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
+                    stopMoney = (costPrice - stopPrice) * openNum * 100;
+                    double originStopMoney = (bondsDataBean.getCostPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
                     stopMoney = stopMoney - originStopMoney;
-                    if (openPrice > stopPrice) {
+                    if (costPrice > stopPrice) {
                         if (stopMoney > (accountDataBean.getTotalMonthRiskMoney() - accountDataBean.getUsedMonthRiskMoney())) {
                             setTextViewText(true, context.getString(R.string.fail2));
                             return;
@@ -204,7 +313,7 @@ public class StopLossAlertDialog {
                         setTextViewText(false, tip);
                         canAdd2DB = true;
                     } else {
-                        if (bondsDataBean.getOpenPrice() > bondsDataBean.getStopLossPrice()) {
+                        if (bondsDataBean.getCostPrice() > bondsDataBean.getStopLossPrice()) {
                             stopMoney = originStopMoney * -1;
                         } else {
                             stopMoney = 0;
@@ -223,9 +332,9 @@ public class StopLossAlertDialog {
             }
         }
 
-        private void doWithFirstCreateByMode(double stopPrice, double openPrice, double openNum) {
-            if (openPrice > stopPrice) {
-                stopMoney = (openPrice - stopPrice) * openNum * 100;
+        private void doWithFirstCreateByMode(double stopPrice, double costPrice, double openNum) {
+            if (costPrice > stopPrice) {
+                stopMoney = (costPrice - stopPrice) * openNum * 100;
                 double remainRiskMoney = accountDataBean.getTotalRiskMoney() - accountDataBean.getUsedRiskMoney();
                 if (stopMoney > remainRiskMoney) {
                     canAdd2DB = false;
@@ -290,8 +399,15 @@ public class StopLossAlertDialog {
             switch (mode) {
                 case MODE_FIRST_CREATE_NORMAL:
                 case MODE_MODIFY_NORMAL: {
+                    if (TextUtils.isEmpty(edStockName.getText().toString()) ||
+                            TextUtils.isEmpty(edCostPrice.getText().toString()) ||
+                            TextUtils.isEmpty(edStopPrice.getText().toString()) ||
+                            TextUtils.isEmpty(edOpenNum.getText().toString())) {
+                        iCallbackStopLoss.refresh(false, "填写信息不全!", null, null);
+                        return;
+                    }
                     if (!myTextChangedListener.canAdd2DB()) {
-                        iCallbackStopLoss.refresh(false, null, null);
+                        iCallbackStopLoss.refresh(false, "超出止损额度!", null, null);
                         return;
                     }
                     BondsDataBean bondsDataBean;
@@ -302,18 +418,23 @@ public class StopLossAlertDialog {
                     }
                     bondsDataBean.setAccountId(accountDataBean.getId());
                     bondsDataBean.setStockName(edStockName.getText().toString());
-                    bondsDataBean.setStopLossPrice(Double.valueOf(edStopPrice.getText().toString()));
-                    double costPrice = 0;
-                    int amountNum = 0;
-                    costPrice = Double.valueOf(edOpenPrice.getText().toString());
-                    amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
-                    bondsDataBean.setOpenPrice(costPrice);
+                    bondsDataBean.setStopLossPrice(Double.parseDouble(edStopPrice.getText().toString()));
+                    double costPrice;
+                    int amountNum;
+                    costPrice = Double.parseDouble(edCostPrice.getText().toString());
+                    amountNum = (int) (Double.parseDouble(edOpenNum.getText().toString()) * 100);
+                    bondsDataBean.setCostPrice(costPrice);
                     bondsDataBean.setBondsNum(amountNum);
+                    if (!TextUtils.isEmpty(edTargePrice.getText().toString())) {
+                        bondsDataBean.setTargetPrice(Double.parseDouble(edTargePrice.getText().toString()));
+                    } else {
+                        bondsDataBean.setTargetPrice(0);
+                    }
 
                     accountDataBean.setUsedRiskMoney(accountDataBean.getUsedRiskMoney() + myTextChangedListener.stopMoney);
                     accountDataBean.setUsedMonthRiskMoney(accountDataBean.getUsedMonthRiskMoney() + myTextChangedListener.stopMoney);
 
-                    iCallbackStopLoss.refresh(myTextChangedListener.canAdd2DB(), accountDataBean, bondsDataBean);
+                    iCallbackStopLoss.refresh(true, "添加止损单成功!", accountDataBean, bondsDataBean);
                     break;
                 }
                 case MODE_MODIFY_PRESET:
@@ -329,17 +450,20 @@ public class StopLossAlertDialog {
                         presetBondsDataBean.setStockName(edStockName.getText().toString());
                     }
                     if (!TextUtils.isEmpty(edStopPrice.getText().toString())) {
-                        presetBondsDataBean.setStopLossPrice(Double.valueOf(edStopPrice.getText().toString()));
+                        presetBondsDataBean.setStopLossPrice(Double.parseDouble(edStopPrice.getText().toString()));
                     }
-                    if (!TextUtils.isEmpty(edOpenPrice.getText().toString())) {
+                    if (!TextUtils.isEmpty(edCostPrice.getText().toString())) {
                         double costPrice = 0;
-                        costPrice = Double.valueOf(edOpenPrice.getText().toString());
-                        presetBondsDataBean.setOpenPrice(costPrice);
+                        costPrice = Double.parseDouble(edCostPrice.getText().toString());
+                        presetBondsDataBean.setCostPrice(costPrice);
                     }
                     if (!TextUtils.isEmpty(edOpenNum.getText().toString())) {
                         int amountNum = 0;
-                        amountNum = (int) (Double.valueOf(edOpenNum.getText().toString()) * 100);
+                        amountNum = (int) (Double.parseDouble(edOpenNum.getText().toString()) * 100);
                         presetBondsDataBean.setBondsNum(amountNum);
+                    }
+                    if (!TextUtils.isEmpty(edTargePrice.getText().toString())) {
+                        presetBondsDataBean.setTargetPrice(Double.parseDouble(edTargePrice.getText().toString()));
                     }
 
                     iCallbackPreset.refresh(presetBondsDataBean);

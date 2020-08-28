@@ -6,12 +6,13 @@
     <string name="remain_risk_amount">剩余风险额: %s (S) | %s (M)</string>
     <string name="used_risk_amount">已用风险额: %s (S) | %s (M)</string>
 
-    <string name="open_price">开仓价格: %s</string>
+    <string name="cost_price">成本价格: %s</string>
     <string name="stop_price">止损价格: %s</string>
-    <string name="open_num">开仓数量: %d(股)</string>
+    <string name="open_num">开仓数量: %d&#160;(股)</string>
     <string name="stop_money">止损金额: %s</string>
     <string name="win_money">盈利金额: %s</string>
     <string name="risk_percent">风险占比: %s%%</string>
+    <string name="target_price">目标价: %s</string>
 
     <string name="tip">提示: \n\n①本次操作消耗%s元风险资金。\n②账户风险金额剩余%s元。\n③资金风险度将从%s%%达到%s%%。</string>
     <string name="tip2">提示: \n\n①本次操作释放%s元风险资金。\n②操作后，账户风险金额剩余%s元。\n③操作后，资金风险度将从%s%%达到%s%%。</string>
@@ -19,5 +20,7 @@
     <string name="min_amount_tip">提示: \n\n①减仓后，该股票的成本价将会变为%s元。</string>
     <string name="fail1">止损金额超出单次的止损额度，将会开仓失败!</string>
     <string name="fail2">止损金额超出本月的止损额度，将会操作失败!</string>
+
+    <string name="target_price_2">目标价为: %s</string>
 
 </resources>

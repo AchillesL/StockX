@@ -5,9 +5,9 @@ public abstract class AbsBondsDataBean {
 
     public abstract void setStockName(String stockName);
 
-    public abstract double getOpenPrice();
+    public abstract double getCostPrice();
 
-    public abstract void setOpenPrice(double openPrice);
+    public abstract void setCostPrice(double costPrice);
 
     public abstract double getStopLossPrice();
 
@@ -20,4 +20,8 @@ public abstract class AbsBondsDataBean {
     public abstract Long getAccountId();
 
     public abstract void setAccountId(Long accountId);
+
+    public abstract double getTargetPrice();
+
+    public abstract void setTargetPrice(double targetPrice);
 }

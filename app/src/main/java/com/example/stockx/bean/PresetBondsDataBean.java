@@ -15,35 +15,36 @@ public class PresetBondsDataBean extends AbsBondsDataBean {
     //股票名称
     private String stockName;
     //开仓价格
-    private double openPrice;
+    private double costPrice;
     //止损价格
     private double stopLossPrice;
+    //目标价
+    private double targetPrice;
     //持仓数量(单位：股)
     private int bondsNum;
 
-    @Generated(hash = 1034386014)
+    @Generated(hash = 1271017158)
     public PresetBondsDataBean(Long id, Long accountId, String stockName,
-                               double openPrice, double stopLossPrice, int bondsNum) {
+                               double costPrice, double stopLossPrice, double targetPrice,
+                               int bondsNum) {
         this.id = id;
         this.accountId = accountId;
         this.stockName = stockName;
-        this.openPrice = openPrice;
+        this.costPrice = costPrice;
         this.stopLossPrice = stopLossPrice;
+        this.targetPrice = targetPrice;
         this.bondsNum = bondsNum;
     }
 
     @Generated(hash = 1492017533)
     public PresetBondsDataBean() {
     }
-
     public Long getId() {
         return this.id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
     public Long getAccountId() {
         return this.accountId;
     }
@@ -60,12 +61,12 @@ public class PresetBondsDataBean extends AbsBondsDataBean {
         this.stockName = stockName;
     }
 
-    public double getOpenPrice() {
-        return this.openPrice;
+    public double getCostPrice() {
+        return this.costPrice;
     }
 
-    public void setOpenPrice(double openPrice) {
-        this.openPrice = openPrice;
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
     }
 
     public double getStopLossPrice() {
@@ -74,6 +75,14 @@ public class PresetBondsDataBean extends AbsBondsDataBean {
 
     public void setStopLossPrice(double stopLossPrice) {
         this.stopLossPrice = stopLossPrice;
+    }
+
+    public double getTargetPrice() {
+        return this.targetPrice;
+    }
+
+    public void setTargetPrice(double targetPrice) {
+        this.targetPrice = targetPrice;
     }
 
     public int getBondsNum() {
@@ -89,8 +98,9 @@ public class PresetBondsDataBean extends AbsBondsDataBean {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PresetBondsDataBean that = (PresetBondsDataBean) o;
-        return Double.compare(that.openPrice, openPrice) == 0 &&
+        return Double.compare(that.costPrice, costPrice) == 0 &&
                 Double.compare(that.stopLossPrice, stopLossPrice) == 0 &&
+                Double.compare(that.targetPrice, targetPrice) == 0 &&
                 bondsNum == that.bondsNum &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(accountId, that.accountId) &&
@@ -99,6 +109,6 @@ public class PresetBondsDataBean extends AbsBondsDataBean {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, accountId, stockName, openPrice, stopLossPrice, bondsNum);
+        return Objects.hash(id, accountId, stockName, costPrice, stopLossPrice, targetPrice, bondsNum);
     }
 }

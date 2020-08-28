@@ -125,7 +125,7 @@ public class PresetView {
     private double getTotalStopLossMoney(List<PresetBondsDataBean> presetBondsDataBeans) {
         double totalStopLoss = 0;
         for (PresetBondsDataBean presetBondsDataBean : presetBondsDataBeans) {
-            totalStopLoss += (presetBondsDataBean.getOpenPrice() - presetBondsDataBean.getStopLossPrice()) * presetBondsDataBean.getBondsNum();
+            totalStopLoss += (presetBondsDataBean.getCostPrice() - presetBondsDataBean.getStopLossPrice()) * presetBondsDataBean.getBondsNum();
         }
         return totalStopLoss;
     }
@@ -159,7 +159,7 @@ public class PresetView {
             if (presetBondsDataBean.getBondsNum() == 0) {
                 continue;
             }
-            if (presetBondsDataBean.getOpenPrice() == 0) {
+            if (presetBondsDataBean.getCostPrice() == 0) {
                 continue;
             }
             if (presetBondsDataBean.getStopLossPrice() == 0) {
@@ -175,6 +175,10 @@ public class PresetView {
     }
 
     public void clearAll() {
+        if (mPresetBondsDataBeans.isEmpty()) {
+            Toast.makeText(mContext, "列表为空!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         CommonAlertDialog commonAlertDialog = new CommonAlertDialog(mContext, "是否删除所有预备单?", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -189,6 +193,10 @@ public class PresetView {
     }
 
     public void clearInvalid() {
+        if (mPresetBondsDataBeans.isEmpty()) {
+            Toast.makeText(mContext, "列表为空!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         CommonAlertDialog commonAlertDialog = new CommonAlertDialog(mContext, "是否删除无效预备单?", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -206,7 +214,7 @@ public class PresetView {
 
     public void add2Stop() {
         if (mPresetBondsDataBeans.isEmpty()) {
-            Toast.makeText(mContext, "列表为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "列表为空!", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!mIsCanAdd) {
@@ -239,7 +247,7 @@ public class PresetView {
         BondsDataBean bondsDataBean = new BondsDataBean();
         bondsDataBean.setAccountId(presetBondsDataBean.getAccountId());
         bondsDataBean.setBondsNum(presetBondsDataBean.getBondsNum());
-        bondsDataBean.setOpenPrice(presetBondsDataBean.getOpenPrice());
+        bondsDataBean.setCostPrice(presetBondsDataBean.getCostPrice());
         bondsDataBean.setStockName(presetBondsDataBean.getStockName());
         bondsDataBean.setStopLossPrice(presetBondsDataBean.getStopLossPrice());
         return bondsDataBean;

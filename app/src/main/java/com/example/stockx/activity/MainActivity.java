@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 BondsDataBean bondsDataBean = (BondsDataBean) mListBaseAdapter.getItem(i - mListView.getHeaderViewsCount());
                 Intent intent = new Intent(MainActivity.this, CommonToolsActivity.class);
-                intent.putExtra("OPEN_PRICE", bondsDataBean.getOpenPrice());
+                intent.putExtra("OPEN_PRICE", bondsDataBean.getCostPrice());
                 intent.putExtra("OPEN_AMOUNT", bondsDataBean.getBondsNum());
                 intent.putExtra("BOND_DATA_ID", bondsDataBean.getId());
                 startActivityForResult(intent, REQUEST_CODE_TOOL_COST_PRICE);
@@ -167,8 +167,8 @@ public class MainActivity extends AppCompatActivity {
                                 double usedMonthRiskMoney = 0;
                                 List<BondsDataBean> bondsDataBeans = mBondsDataBeanDao.queryRaw("where ACCOUNT_ID = ?", String.valueOf(mSettingBean.getCurrentAccountID()));
                                 for (BondsDataBean bondsDataBean : bondsDataBeans) {
-                                    if (bondsDataBean.getOpenPrice() > bondsDataBean.getStopLossPrice()) {
-                                        usedMonthRiskMoney += (bondsDataBean.getOpenPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
+                                    if (bondsDataBean.getCostPrice() > bondsDataBean.getStopLossPrice()) {
+                                        usedMonthRiskMoney += (bondsDataBean.getCostPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
                                     }
                                 }
                                 accountDataBean.setUsedMonthRiskMoney(usedMonthRiskMoney);
@@ -322,12 +322,12 @@ public class MainActivity extends AppCompatActivity {
         }
         stopLossAlertDialog.setCallbackStopLoss(new StopLossAlertDialog.ICallbackStopLoss() {
             @Override
-            public void refresh(boolean canAdd2DB, AccountDataBean accountDataBean, BondsDataBean bondsDataBean) {
+            public void refresh(boolean canAdd2DB, String msg, AccountDataBean accountDataBean, BondsDataBean bondsDataBean) {
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                 if (!canAdd2DB) {
-                    Toast.makeText(MainActivity.this, "超出止损额度，添加失败!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                //可添加止损单，则更改数据库信息
+
                 DaoManager.getInstance().getDaoSession().getAccountDataBeanDao().insertOrReplace(accountDataBean);
                 DaoManager.getInstance().getDaoSession().getBondsDataBeanDao().insertOrReplace(bondsDataBean);
 
@@ -394,17 +394,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void delete(double openPrice, double stopPrice, AbsBondsDataBean absBondsDataBean) {
-                deleteBondsItem(openPrice, stopPrice, (BondsDataBean) absBondsDataBean);
+            public void delete(double costPrice, double stopPrice, AbsBondsDataBean absBondsDataBean) {
+                deleteBondsItem(costPrice, stopPrice, (BondsDataBean) absBondsDataBean);
             }
         });
     }
 
-    private void deleteBondsItem(final double openPrice, final double stopPrice, final BondsDataBean bondsDataBean) {
+    private void deleteBondsItem(final double costPrice, final double stopPrice, final BondsDataBean bondsDataBean) {
         String title = "提示";
         String msg = "确定删除目前的记录吗?";
 
-        final double stopLossMoney = (openPrice - stopPrice) * bondsDataBean.getBondsNum();
+        final double stopLossMoney = (costPrice - stopPrice) * bondsDataBean.getBondsNum();
         final boolean needUpdateRiskMoney = stopLossMoney > 0;
 
         final EditText editText = (EditText) LayoutInflater.from(MainActivity.this).inflate(R.layout.view_edittext_dialog, null).findViewById(R.id.editText);
@@ -414,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (needUpdateRiskMoney) {
                     AccountDataBean accountDataBean = getCurrentAccountDataBean();
-                    double stopMoney = (openPrice - stopPrice) * bondsDataBean.getBondsNum();
+                    double stopMoney = (costPrice - stopPrice) * bondsDataBean.getBondsNum();
                     accountDataBean.setUsedRiskMoney(accountDataBean.getUsedRiskMoney() - stopMoney);
 
                     double realStopMoney = TextUtils.isEmpty(editText.getText()) ? 0 : Double.parseDouble(editText.getText().toString());
@@ -458,6 +458,24 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
 
+    private void updateAccountDataAndListHeader(int accountID) {
+        List<BondsDataBean> bondsDataBeans = DaoManager.getInstance().getDaoSession().getBondsDataBeanDao()
+                .queryRaw("where ACCOUNT_ID = ?", String.valueOf(mSettingBean.getCurrentAccountID()));
+        double usedRiskMoney = 0;
+
+        for (BondsDataBean bondsDataBean : bondsDataBeans) {
+            if (bondsDataBean.getCostPrice() > bondsDataBean.getStopLossPrice()) {
+                usedRiskMoney += (bondsDataBean.getCostPrice() - bondsDataBean.getStopLossPrice()) * bondsDataBean.getBondsNum();
+            }
+        }
+
+        AccountDataBean accountDataBean = getCurrentAccountDataBean();
+        accountDataBean.setUsedRiskMoney(usedRiskMoney);
+        accountDataBean.setUsedMonthRiskMoney(accountDataBean.getUsedMonthRiskMoney() + usedRiskMoney);
+        DaoManager.getInstance().getDaoSession().getAccountDataBeanDao().insertOrReplaceInTx(accountDataBean);
+
+        mListViewHeader.refresh(accountDataBean);
     }
 }

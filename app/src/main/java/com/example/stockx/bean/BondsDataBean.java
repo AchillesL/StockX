@@ -12,21 +12,25 @@ public class BondsDataBean extends AbsBondsDataBean {
     private Long accountId;
     //股票名称
     private String stockName;
-    //开仓价格
-    private double openPrice;
-    //止损价格，包括移动止损
+    //成本价格
+    private double costPrice;
+    //止损价格
     private double stopLossPrice;
+    //目标价
+    private double targetPrice;
     //持仓数量(单位：股)
     private int bondsNum;
 
-    @Generated(hash = 2106638465)
+    @Generated(hash = 1771523478)
     public BondsDataBean(Long id, Long accountId, String stockName,
-                         double openPrice, double stopLossPrice, int bondsNum) {
+                         double costPrice, double stopLossPrice, double targetPrice,
+                         int bondsNum) {
         this.id = id;
         this.accountId = accountId;
         this.stockName = stockName;
-        this.openPrice = openPrice;
+        this.costPrice = costPrice;
         this.stopLossPrice = stopLossPrice;
+        this.targetPrice = targetPrice;
         this.bondsNum = bondsNum;
     }
 
@@ -42,6 +46,14 @@ public class BondsDataBean extends AbsBondsDataBean {
         this.id = id;
     }
 
+    public Long getAccountId() {
+        return this.accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
     public String getStockName() {
         return this.stockName;
     }
@@ -50,12 +62,12 @@ public class BondsDataBean extends AbsBondsDataBean {
         this.stockName = stockName;
     }
 
-    public double getOpenPrice() {
-        return this.openPrice;
+    public double getCostPrice() {
+        return this.costPrice;
     }
 
-    public void setOpenPrice(double openPrice) {
-        this.openPrice = openPrice;
+    public void setCostPrice(double costPrice) {
+        this.costPrice = costPrice;
     }
 
     public double getStopLossPrice() {
@@ -66,6 +78,14 @@ public class BondsDataBean extends AbsBondsDataBean {
         this.stopLossPrice = stopLossPrice;
     }
 
+    public double getTargetPrice() {
+        return this.targetPrice;
+    }
+
+    public void setTargetPrice(double targetPrice) {
+        this.targetPrice = targetPrice;
+    }
+
     public int getBondsNum() {
         return this.bondsNum;
     }
@@ -74,12 +94,5 @@ public class BondsDataBean extends AbsBondsDataBean {
         this.bondsNum = bondsNum;
     }
 
-    public Long getAccountId() {
-        return this.accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
 
 }
