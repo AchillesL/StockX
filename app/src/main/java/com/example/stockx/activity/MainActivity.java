@@ -227,6 +227,10 @@ public class MainActivity extends AppCompatActivity {
         final RadioButton rbRatio2 = linearLayout.findViewById(R.id.rb_ratio_2);
         RadioButton rbRatio3 = linearLayout.findViewById(R.id.rb_ratio_3);
 
+        rbRatio1.setText(StockXUtils.RISK_RATIO_1 + "%");
+        rbRatio2.setText(StockXUtils.RISK_RATIO_2 + "%");
+        rbRatio3.setText(StockXUtils.RISK_RATIO_3 + "%");
+
         if (accountDataBean.getRiskRatio() == StockXUtils.RISK_RATIO_1) {
             rbRatio1.setChecked(true);
         } else if (accountDataBean.getRiskRatio() == StockXUtils.RISK_RATIO_2) {
@@ -353,6 +357,10 @@ public class MainActivity extends AppCompatActivity {
         final RadioButton rbRatio1 = view.findViewById(R.id.rb_ratio_1);
         final RadioButton rbRatio2 = view.findViewById(R.id.rb_ratio_2);
         final RadioButton rbRatio3 = view.findViewById(R.id.rb_ratio_3);
+
+        rbRatio1.setText(StockXUtils.RISK_RATIO_1 + "%");
+        rbRatio2.setText(StockXUtils.RISK_RATIO_2 + "%");
+        rbRatio3.setText(StockXUtils.RISK_RATIO_3 + "%");
 
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override

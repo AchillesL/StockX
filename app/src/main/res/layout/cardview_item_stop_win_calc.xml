@@ -21,17 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="成本价计算(加仓)" />
+            android:text="止损/止盈金额计算" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_current_cost_price"
+                android:id="@+id/ed_stop_loss_cost_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="输入目前成本价"
+                android:hint="输入成本价"
                 android:inputType="numberDecimal"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -41,10 +41,10 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_current_amount"
+                android:id="@+id/ed_stop_loss_stop_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="输入目前仓位(手)"
+                android:hint="输入止损/止盈价"
                 android:inputType="numberDecimal"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -54,23 +54,10 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_add_open_price"
+                android:id="@+id/ed_stop_loss_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="输入加仓价格"
-                android:inputType="numberDecimal"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_add_amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="输入加仓仓位(手)"
+                android:hint="输入股票数量(单位:手)"
                 android:inputType="number"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -82,43 +69,22 @@
             android:paddingBottom="5dp">
 
             <TextView
-                android:id="@+id/tv_cost_price_tip"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_stop_loss_tip"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:visibility="invisible" />
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_cost_price_clear"
+                android:id="@+id/tv_stop_loss_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_gravity="bottom"
                 android:layout_marginLeft="15dp"
                 android:text="清除"
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tv_cost_price_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_toLeftOf="@id/tv_cost_price_clear"
-                android:text="更新"
-                android:textColor="@android:color/holo_blue_dark"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tv_cost_price_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_toLeftOf="@id/tv_cost_price_update"
-                android:text="保存"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="14sp" />
         </RelativeLayout>
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

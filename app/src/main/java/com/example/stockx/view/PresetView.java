@@ -73,8 +73,10 @@ public class PresetView {
                 StopLossAlertDialog stopLossAlertDialog = new StopLossAlertDialog(mContext, StopLossAlertDialog.MODE_MODIFY_PRESET, absBondsDataBean, mAccountDataBean);
                 stopLossAlertDialog.setPresetBondsDataBean((PresetBondsDataBean) absBondsDataBean);
                 stopLossAlertDialog.setCallbackPreset(new StopLossAlertDialog.ICallbackPreset() {
+
                     @Override
-                    public void refresh(PresetBondsDataBean presetBondsDataBean) {
+                    public void refresh(String msg, PresetBondsDataBean presetBondsDataBean) {
+                        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
                         DaoManager.getInstance().getDaoSession().getPresetBondsDataBeanDao().insertOrReplace(presetBondsDataBean);
                         updateListViewAndData();
                     }
@@ -105,8 +107,10 @@ public class PresetView {
                 }
                 StopLossAlertDialog stopLossAlertDialog = new StopLossAlertDialog(mContext, StopLossAlertDialog.MODE_FIRST_CREATE_PRESET, null, mAccountDataBean);
                 stopLossAlertDialog.setCallbackPreset(new StopLossAlertDialog.ICallbackPreset() {
+
                     @Override
-                    public void refresh(PresetBondsDataBean presetBondsDataBean) {
+                    public void refresh(String msg, PresetBondsDataBean presetBondsDataBean) {
+                        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
                         DaoManager.getInstance().getDaoSession().getPresetBondsDataBeanDao().insertOrReplace(presetBondsDataBean);
                         updateListViewAndData();
                     }

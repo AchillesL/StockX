@@ -8,8 +8,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.stockx.R;
@@ -53,7 +51,7 @@ public class StopLossAlertDialog {
     }
 
     public interface ICallbackPreset {
-        public void refresh(PresetBondsDataBean presetBondsDataBean);
+        public void refresh(String msg, PresetBondsDataBean presetBondsDataBean);
     }
 
     private ICallbackStopLoss iCallbackStopLoss;
@@ -123,90 +121,22 @@ public class StopLossAlertDialog {
         edTargePrice.addTextChangedListener(myTextChangedListener);
 
         tvCalcTargePrice.setOnClickListener(new View.OnClickListener() {
-            View view;
-            TextInputEditText edHighPrice;
-            TextInputEditText edLowPrice;
-            TextView tvTip;
-            RadioButton rbRatio1;
-            RadioButton rbRatio2;
-            MyTextWather myTextWather;
-
-
             @Override
             public void onClick(View v) {
-                final MyTextWather myTextWather = new MyTextWather();
-                view = LayoutInflater.from(context).inflate(R.layout.view_calc_target_price_dialog, null);
-                edHighPrice = (TextInputEditText) view.findViewById(R.id.ed_high_price);
-                edLowPrice = (TextInputEditText) view.findViewById(R.id.ed_low_price);
-                tvTip = (TextView) view.findViewById(R.id.tv_tip);
-                rbRatio1 = (RadioButton) view.findViewById(R.id.rb_ratio_1);
-                rbRatio2 = (RadioButton) view.findViewById(R.id.rb_ratio_2);
-                rbRatio1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (!isChecked) return;
-                        tvTip.setText(context.getString(R.string.target_price_2, StockXUtils.twoDeic(myTextWather.basePrice + myTextWather.flowPrice)));
-                    }
-                });
-                rbRatio2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (!isChecked) return;
-                        tvTip.setText(context.getString(R.string.target_price_2, StockXUtils.twoDeic(myTextWather.basePrice + myTextWather.flowPrice * 0.8)));
-                    }
-                });
-                edHighPrice.addTextChangedListener(myTextWather);
-                edLowPrice.addTextChangedListener(myTextWather);
-
-                CommonAlertDialog commonAlertDialog = new CommonAlertDialog(context, "计算目标价", null, view, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (Double.compare(myTextWather.flowPrice, 0) != 0) {
-                            double targetPrice = rbRatio2.isChecked() ?
-                                    (myTextWather.basePrice + myTextWather.flowPrice * 0.8) :
-                                    (myTextWather.basePrice + myTextWather.flowPrice);
-                            edTargePrice.setText(StockXUtils.twoDeic(targetPrice));
-                            edTargePrice.requestFocus();
-                            edTargePrice.setSelection(edTargePrice.getText().toString().length());
-                        }
-                    }
-                });
+                final CTTargetPriceCalc ctTargetPriceCalc = new CTTargetPriceCalc(context);
+                ctTargetPriceCalc.isDialog(true);
+                CommonAlertDialog commonAlertDialog = new CommonAlertDialog(context, "计算目标价", null, ctTargetPriceCalc.getView(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (Double.compare(ctTargetPriceCalc.getTargePrice(), 0) != 0) {
+                                    edTargePrice.setText(StockXUtils.twoDeic(ctTargetPriceCalc.getTargePrice()));
+                                    edTargePrice.requestFocus();
+                                    edTargePrice.setSelection(edTargePrice.getText().toString().length());
+                                }
+                            }
+                        });
                 commonAlertDialog.show();
-            }
-
-            class MyTextWather implements TextWatcher {
-
-                double flowPrice;
-                double basePrice;
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (!TextUtils.isEmpty(edHighPrice.getText().toString()) && !TextUtils.isEmpty(edLowPrice.getText().toString())) {
-                        tvTip.setVisibility(View.VISIBLE);
-                    } else {
-                        tvTip.setVisibility(View.INVISIBLE);
-                        return;
-                    }
-                    double highPrice = Double.parseDouble(edHighPrice.getText().toString());
-                    this.basePrice = highPrice;
-                    double lowPrice = Double.parseDouble(edLowPrice.getText().toString());
-                    this.flowPrice = highPrice - lowPrice;
-                    if (rbRatio2.isChecked()) {
-                        tvTip.setText(context.getString(R.string.target_price_2, StockXUtils.twoDeic(basePrice + flowPrice * 0.8)));
-                    } else {
-                        tvTip.setText(context.getString(R.string.target_price_2, StockXUtils.twoDeic(basePrice + flowPrice)));
-                    }
-                }
             }
         });
 
@@ -434,7 +364,11 @@ public class StopLossAlertDialog {
                     accountDataBean.setUsedRiskMoney(accountDataBean.getUsedRiskMoney() + myTextChangedListener.stopMoney);
                     accountDataBean.setUsedMonthRiskMoney(accountDataBean.getUsedMonthRiskMoney() + myTextChangedListener.stopMoney);
 
-                    iCallbackStopLoss.refresh(true, "添加止损单成功!", accountDataBean, bondsDataBean);
+                    if (mode == MODE_MODIFY_NORMAL) {
+                        iCallbackStopLoss.refresh(true, "修改止损单成功!", accountDataBean, bondsDataBean);
+                    } else {
+                        iCallbackStopLoss.refresh(true, "添加止损单成功!", accountDataBean, bondsDataBean);
+                    }
                     break;
                 }
                 case MODE_MODIFY_PRESET:
@@ -466,7 +400,12 @@ public class StopLossAlertDialog {
                         presetBondsDataBean.setTargetPrice(Double.parseDouble(edTargePrice.getText().toString()));
                     }
 
-                    iCallbackPreset.refresh(presetBondsDataBean);
+                    if (mode == MODE_MODIFY_PRESET) {
+                        iCallbackPreset.refresh("修改预备单成功!", presetBondsDataBean);
+                    } else {
+                        iCallbackPreset.refresh("添加预备单成功!", presetBondsDataBean);
+                    }
+
                     break;
                 }
             }

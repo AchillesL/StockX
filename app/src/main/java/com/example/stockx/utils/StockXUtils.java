@@ -9,9 +9,14 @@ import java.util.List;
 
 public class StockXUtils {
 
-    public static double RISK_RATIO_1 = 1;
+    public static double RISK_RATIO_1 = 1.28;
     public static double RISK_RATIO_2 = 2;
     public static double RISK_RATIO_3 = 2.88;
+
+
+    public static double TARGET_PRICE_RATIO_LOW = 80;
+    public static double TARGET_PRICE_RATIO_MID = 100;
+    public static double TARGET_PRICE_RATIO_HIGH = 120;
 
     public static String twoDeic(double value) {
         return String.format("%.2f", value);

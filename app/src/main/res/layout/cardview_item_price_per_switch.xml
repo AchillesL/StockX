@@ -8,7 +8,6 @@
     android:layout_marginTop="3dp"
     android:layout_marginRight="2dp"
     android:layout_marginBottom="18dp">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,56 +15,53 @@
         android:padding="15dp"
         tools:showIn="@layout/activity_common_tools">
 
-        <TextView
-            style="@style/textSize"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="网格交易计算" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/textSize"
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="价格转百分比" />
+
+            <ImageView
+                android:id="@+id/iv_swicth"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/switch_per_price" />
+
+        </RelativeLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_grid_trade_base_price"
+                android:id="@+id/ed_input_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="输入基准价"
+                android:hint="输入第一个价格(基准价)"
                 android:inputType="numberDecimal"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <RadioGroup
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_input_2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <RadioButton
-                android:id="@+id/rb_grid_trade_3_5"
-                android:textSize="14sp"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_input_2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-3% / +5%" />
-
-            <RadioButton
-                android:id="@+id/rb_grid_trade_5_5"
-                android:textSize="14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-5% / +5%" />
-
-            <RadioButton
-                android:id="@+id/rb_grid_trade_8_8"
-                android:textSize="14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-8% / +10%" />
-        </RadioGroup>
+                android:hint="输入第二个价格(目标价)"
+                android:inputType="numberSigned|numberDecimal"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -74,13 +70,13 @@
             android:paddingBottom="5dp">
 
             <TextView
-                android:id="@+id/tv_grid_trade_tip"
+                android:id="@+id/tv_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_grid_trade_clear"
+                android:id="@+id/tv_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -91,5 +87,4 @@
         </RelativeLayout>
 
     </LinearLayout>
-
 </androidx.cardview.widget.CardView>
