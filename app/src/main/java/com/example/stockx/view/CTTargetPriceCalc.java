@@ -154,5 +154,8 @@ public class CTTargetPriceCalc {
     public void isDialog(boolean b) {
         tvTitle.setVisibility(b ? View.GONE : View.VISIBLE);
         tvClear.setVisibility(b ? View.GONE : View.VISIBLE);
+        if (b) {
+            edHighPrice.requestFocus();
+        }
     }
 }

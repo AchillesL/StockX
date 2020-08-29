@@ -1,5 +1,7 @@
 package com.example.stockx.utils;
 
+import android.text.TextUtils;
+
 import com.example.stockx.bean.AbsBondsDataBean;
 import com.example.stockx.bean.BondsDataBean;
 import com.example.stockx.bean.PresetBondsDataBean;
@@ -40,5 +42,16 @@ public class StockXUtils {
             absBondsDataBeans.add(presetBondsDataBean);
         }
         return absBondsDataBeans;
+    }
+
+    public static boolean isVaildPresetBondsDataBean(PresetBondsDataBean presetBondsDataBean) {
+        if (TextUtils.isEmpty(presetBondsDataBean.getStockName())
+                || Double.compare(presetBondsDataBean.getBondsNum(), 0) == 0
+                || Double.compare(presetBondsDataBean.getBondsNum(), 0) == 0
+                || Double.compare(presetBondsDataBean.getCostPrice(), 0) == 0
+                || Double.compare(presetBondsDataBean.getStopLossPrice(), 0) == 0) {
+            return false;
+        }
+        return true;
     }
 }

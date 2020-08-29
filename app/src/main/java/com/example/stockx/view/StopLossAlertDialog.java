@@ -112,6 +112,8 @@ public class StopLossAlertDialog {
             } else {
                 edTargePrice.setText(StockXUtils.twoDeic(absBondsDataBean.getTargetPrice()));
             }
+        } else {
+            edStockName.requestFocus();
         }
 
         myTextChangedListener = new MyTextChangedListener(accountDataBean);

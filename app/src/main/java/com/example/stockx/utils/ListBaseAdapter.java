@@ -12,6 +12,7 @@ import com.example.stockx.R;
 import com.example.stockx.bean.AbsBondsDataBean;
 import com.example.stockx.bean.AccountDataBean;
 import com.example.stockx.bean.BondsDataBean;
+import com.example.stockx.bean.PresetBondsDataBean;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -115,7 +116,7 @@ public class ListBaseAdapter extends BaseAdapter {
             }
         } else {
             ivSafeIcon.setVisibility(View.INVISIBLE);
-            if (stopOrWinMoney != 0) {
+            if (StockXUtils.isVaildPresetBondsDataBean((PresetBondsDataBean) absBondsDataBean)) {
                 tvStopWinMoney.setText(String.format(mContext.getResources().getString(R.string.stop_money), StockXUtils.intDeic(stopOrWinMoney)));
             } else {
                 tvStopWinMoney.setText(String.format(mContext.getResources().getString(R.string.stop_money), "无"));

@@ -12,7 +12,7 @@
     <string name="stop_money">止损金额: %s</string>
     <string name="win_money">盈利金额: %s</string>
     <string name="risk_percent">风险占比: %s%%</string>
-    <string name="target_price">目标价: %s</string>
+    <string name="target_price">目标价格: %s</string>
 
     <string name="tip">提示: \n\n①本次操作消耗%s元风险资金。\n②账户风险金额剩余%s元。\n③资金风险度将从%s%%达到%s%%。</string>
     <string name="tip2">提示: \n\n①本次操作释放%s元风险资金。\n②操作后，账户风险金额剩余%s元。\n③操作后，资金风险度将从%s%%达到%s%%。</string>

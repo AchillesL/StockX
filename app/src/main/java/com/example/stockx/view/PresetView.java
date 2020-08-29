@@ -2,10 +2,8 @@ package com.example.stockx.view;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +17,7 @@ import com.example.stockx.bean.BondsDataBean;
 import com.example.stockx.bean.PresetBondsDataBean;
 import com.example.stockx.utils.ListBaseAdapter;
 import com.example.stockx.utils.StockXUtils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class PresetView {
     private TextView mTvStatus;
     private TextView mTvWarning;
     private ListView mListView;
-    private ImageView mLvAdd;
+    private FloatingActionButton mLvAdd;
 
     private boolean mIsCanAdd = true;
 
@@ -62,7 +61,7 @@ public class PresetView {
         mTvStatus = (TextView) mView.findViewById(R.id.tv_status);
         mTvWarning = (TextView) mView.findViewById(R.id.tv_waring);
         mListView = (ListView) mView.findViewById(R.id.listView);
-        mLvAdd = (ImageView) mView.findViewById(R.id.iv_add);
+        mLvAdd = (FloatingActionButton) mView.findViewById(R.id.iv_add);
 
         updateStatus(mPresetBondsDataBeans);
 
@@ -141,9 +140,8 @@ public class PresetView {
         String tip = "";
         double remainRiskMoney = mAccountDataBean.getTotalRiskMoney() - mAccountDataBean.getUsedRiskMoney() - totalStopLoss;
         double remainMonthRiskMoney = mAccountDataBean.getTotalMonthRiskMoney() - mAccountDataBean.getUsedMonthRiskMoney() - totalStopLoss;
-        tip += "本次消耗风险金额为：" + StockXUtils.intDeic(totalStopLoss) + "\n" +
-                "剩余单次风险金额为：" + StockXUtils.intDeic(remainRiskMoney) + "\n" +
-                "剩余月度风险金额为：" + StockXUtils.intDeic(remainMonthRiskMoney);
+        tip += "消耗风险金额为：" + StockXUtils.intDeic(totalStopLoss) + "\n" +
+                "剩余风险金额为：" + StockXUtils.intDeic(remainRiskMoney) + " (单次) | " + StockXUtils.intDeic(remainMonthRiskMoney) + " (月度)";
         mTvStatus.setText(tip);
         if (remainRiskMoney < 0 || remainMonthRiskMoney < 0) {
             mIsCanAdd = false;
@@ -157,19 +155,9 @@ public class PresetView {
     private List<PresetBondsDataBean> getVaildPresetBondsDataBean(List<PresetBondsDataBean> presetBondsDataBeansOrigin) {
         List<PresetBondsDataBean> presetBondsDataBeans = new ArrayList<>();
         for (PresetBondsDataBean presetBondsDataBean : presetBondsDataBeansOrigin) {
-            if (TextUtils.isEmpty(presetBondsDataBean.getStockName())) {
-                continue;
+            if (StockXUtils.isVaildPresetBondsDataBean(presetBondsDataBean)) {
+                presetBondsDataBeans.add(presetBondsDataBean);
             }
-            if (presetBondsDataBean.getBondsNum() == 0) {
-                continue;
-            }
-            if (presetBondsDataBean.getCostPrice() == 0) {
-                continue;
-            }
-            if (presetBondsDataBean.getStopLossPrice() == 0) {
-                continue;
-            }
-            presetBondsDataBeans.add(presetBondsDataBean);
         }
         return presetBondsDataBeans;
     }

@@ -11,6 +11,7 @@
         style="@style/textSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:text="计算目标价" />
 
     <com.google.android.material.textfield.TextInputLayout
