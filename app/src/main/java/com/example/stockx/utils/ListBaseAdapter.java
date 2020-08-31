@@ -87,7 +87,7 @@ public class ListBaseAdapter extends BaseAdapter {
 
         TextView tvStockName = (TextView) view.findViewById(R.id.tv_stock_name);
         ImageView ivSafeIcon = (ImageView) view.findViewById(R.id.iv_safe_icon);
-        TextView tvCostPrice = (TextView) view.findViewById(R.id.tv_open_price);
+        TextView tvCostPrice = (TextView) view.findViewById(R.id.tv_cost_price);
         TextView tvStopPrice = (TextView) view.findViewById(R.id.tv_stop_price);
         TextView tvOpenNum = (TextView) view.findViewById(R.id.tv_open_num);
         TextView tvStopWinMoney = (TextView) view.findViewById(R.id.tv_stop_win_money);
@@ -138,6 +138,7 @@ public class ListBaseAdapter extends BaseAdapter {
         }
 
         tvOpenNum.setText(String.format(mContext.getResources().getString(R.string.open_num), absBondsDataBean.getBondsNum()));
+
 
         ivModify.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -80,7 +80,8 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/textview_border_add"
                 android:padding="8dp"
-                android:text="+1" />
+                android:text="+1"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_open_num_min_one"
@@ -88,8 +89,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/textview_border_min"
-                android:padding="8dp"
-                android:text="-1" />
+                android:paddingLeft="10dp"
+                android:paddingTop="8dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="8dp"
+                android:text="-1"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_open_num_add_ten"
@@ -97,7 +102,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/textview_border_add"
                 android:padding="8dp"
-                android:text="+10" />
+                android:text="+10"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

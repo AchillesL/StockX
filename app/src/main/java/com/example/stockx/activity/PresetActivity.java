@@ -3,6 +3,7 @@ package com.example.stockx.activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ public class PresetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preset);
         setTitle("预备单");
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mAccountID = getIntent().getLongExtra(MainActivity.S_ID_ACCOUNT, -1);
         mAccountDataBean = DaoManager.getInstance().getDaoSession().getAccountDataBeanDao().load(mAccountID);

@@ -27,13 +27,6 @@
             android:hint="账户权益" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        style="@style/textSize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="选择风险系数(月风险系数是该系数的3倍): " />
-
     <RadioGroup
         android:layout_width="match_parent"
         android:orientation="horizontal"
@@ -62,5 +55,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </RadioGroup>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="注: 月风险系数是该系数的3倍" />
 
 </LinearLayout>

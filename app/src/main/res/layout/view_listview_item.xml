@@ -48,7 +48,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_open_price"
+                    android:id="@+id/tv_cost_price"
                     style="@style/textSize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

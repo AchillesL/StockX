@@ -101,17 +101,34 @@ public class StopLossAlertDialog {
     private void initViews() {
         if (mode == MODE_MODIFY_NORMAL || mode == MODE_MODIFY_PRESET) {
             edStockName.setText(absBondsDataBean.getStockName());
-            edCostPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getCostPrice()));
-            edStopPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getStopLossPrice()));
-            edOpenNum.setText(String.valueOf(absBondsDataBean.getBondsNum() / 100.0));
-            edOpenNum.requestFocus();
-            edOpenNum.setSelection(edOpenNum.getText().toString().length());
+
+            if (Double.compare(absBondsDataBean.getBondsNum(), 0) == 0) {
+                edOpenNum.setText("");
+                edOpenNum.requestFocus();
+            } else {
+                edOpenNum.setText(String.valueOf(absBondsDataBean.getBondsNum() / 100.0));
+            }
 
             if (Double.compare(absBondsDataBean.getTargetPrice(), 0) == 0) {
                 edTargePrice.setText("");
             } else {
                 edTargePrice.setText(StockXUtils.twoDeic(absBondsDataBean.getTargetPrice()));
             }
+
+            if (Double.compare(absBondsDataBean.getCostPrice(), 0) == 0) {
+                edCostPrice.setText("");
+                edCostPrice.requestFocus();
+            } else {
+                edCostPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getCostPrice()));
+            }
+
+            if (Double.compare(absBondsDataBean.getStopLossPrice(), 0) == 0) {
+                edStopPrice.setText("");
+                edStopPrice.requestFocus();
+            } else {
+                edStopPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getStopLossPrice()));
+            }
+
         } else {
             edStockName.requestFocus();
         }
@@ -384,22 +401,28 @@ public class StopLossAlertDialog {
                     presetBondsDataBean.setAccountId(accountDataBean.getId());
                     if (!TextUtils.isEmpty(edStockName.getText().toString())) {
                         presetBondsDataBean.setStockName(edStockName.getText().toString());
+                    } else {
+                        presetBondsDataBean.setStockName("无");
                     }
                     if (!TextUtils.isEmpty(edStopPrice.getText().toString())) {
                         presetBondsDataBean.setStopLossPrice(Double.parseDouble(edStopPrice.getText().toString()));
+                    } else {
+                        presetBondsDataBean.setStopLossPrice(0f);
                     }
                     if (!TextUtils.isEmpty(edCostPrice.getText().toString())) {
-                        double costPrice = 0;
-                        costPrice = Double.parseDouble(edCostPrice.getText().toString());
-                        presetBondsDataBean.setCostPrice(costPrice);
+                        presetBondsDataBean.setCostPrice(Double.parseDouble(edCostPrice.getText().toString()));
+                    } else {
+                        presetBondsDataBean.setCostPrice(0f);
                     }
                     if (!TextUtils.isEmpty(edOpenNum.getText().toString())) {
-                        int amountNum = 0;
-                        amountNum = (int) (Double.parseDouble(edOpenNum.getText().toString()) * 100);
-                        presetBondsDataBean.setBondsNum(amountNum);
+                        presetBondsDataBean.setBondsNum((int) (Double.parseDouble(edOpenNum.getText().toString()) * 100));
+                    } else {
+                        presetBondsDataBean.setBondsNum(0);
                     }
                     if (!TextUtils.isEmpty(edTargePrice.getText().toString())) {
                         presetBondsDataBean.setTargetPrice(Double.parseDouble(edTargePrice.getText().toString()));
+                    } else {
+                        presetBondsDataBean.setTargetPrice(0f);
                     }
 
                     if (mode == MODE_MODIFY_PRESET) {
