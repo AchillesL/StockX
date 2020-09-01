@@ -59,8 +59,8 @@ public class CTCostPirceCalcView {
     public void setCostData(long bondsDataId,double costPrice,double amount) {
         this.bondsDataId = bondsDataId;
         if (Double.compare(costPrice,0) != 0 && Double.compare(amount,0) != 0) {
-            edCurrentCostPrice.setText(StockXUtils.twoDeic(costPrice));
-            edCurrentAmount.setText(StockXUtils.twoDeic(amount));
+            edCurrentCostPrice.setText(StockXUtils.validDeic(costPrice));
+            edCurrentAmount.setText(StockXUtils.validDeic(amount));
             edAddOpenPrice.requestFocus();
         }
     }
@@ -89,8 +89,8 @@ public class CTCostPirceCalcView {
                 double costPrice = (double) tvCostPriceTip.getTag(R.id.tag_cost_price);
                 double amount = (double) tvCostPriceTip.getTag(R.id.tag_amount);
 
-                edCurrentCostPrice.setText(StockXUtils.twoDeic(costPrice));
-                edCurrentAmount.setText(StockXUtils.twoDeic(amount));
+                edCurrentCostPrice.setText(StockXUtils.validDeic(costPrice));
+                edCurrentAmount.setText(StockXUtils.validDeic(amount));
                 edAddOpenPrice.setText("");
                 edAddAmount.setText("");
                 edAddOpenPrice.requestFocus();
@@ -116,13 +116,13 @@ public class CTCostPirceCalcView {
                 RadioButton rbBreakEven = view.findViewById(R.id.rb_break_even);
                 RadioButton rbBreakEven1 = view.findViewById(R.id.rb_break_even_1);
 
-                edCostPrice.setText(StockXUtils.twoDeic(costPriceTextWatcher.costPrice));
-                edStopPrice.setText(StockXUtils.twoDeic(costPriceTextWatcher.costPrice));
+                edCostPrice.setText(StockXUtils.validDeic(costPriceTextWatcher.costPrice));
+                edStopPrice.setText(StockXUtils.validDeic(costPriceTextWatcher.costPrice));
                 rbBreakEven.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (!isChecked) return;
-                        edStopPrice.setText(StockXUtils.twoDeic(Double.parseDouble(edCostPrice.getText().toString())));
+                        edStopPrice.setText(StockXUtils.validDeic(Double.parseDouble(edCostPrice.getText().toString())));
                     }
                 });
                 rbBreakEven1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -130,7 +130,7 @@ public class CTCostPirceCalcView {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (!isChecked) return;
                         double costPrice = Double.parseDouble(edCostPrice.getText().toString());
-                        edStopPrice.setText(StockXUtils.twoDeic(costPrice + costPrice * 0.01));
+                        edStopPrice.setText(StockXUtils.validDeic(costPrice + costPrice * 0.01));
                     }
                 });
 
@@ -214,9 +214,9 @@ public class CTCostPirceCalcView {
             tvCostPriceTip.setTag(R.id.tag_cost_price, costPrice);
             tvCostPriceTip.setTag(R.id.tag_amount, curAmount + curAddAmount);
             tvCostPriceTip.setText(
-                    "加仓后, 成本价是:  " + StockXUtils.twoDeic(costPrice) + "元"
-                            + "\n加仓后, 当前市值是:  " + StockXUtils.twoDeic(sum) + "元"
-                            + "\n加仓后, 现价到成本价的距离是:  " + StockXUtils.twoDeic(distance) + "%")
+                    "成本价变为:  " + StockXUtils.twoDeic(costPrice) + "元"
+                            + "\n该股市值为:  " + StockXUtils.twoDeic(sum) + "元"
+                            + "\n现价到成本价的距离:  " + StockXUtils.twoDeic(distance) + "%")
             ;
         }
     }

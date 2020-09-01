@@ -12,7 +12,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.stockx.R;
-import com.example.stockx.activity.CommonToolsActivity;
 import com.example.stockx.utils.StockXUtils;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -102,8 +101,8 @@ public class CTGridTradeView {
             if (!rbGridTrade35.isChecked() && !rbGridTrade55.isChecked() && !rbGridTrade88.isChecked())
                 return;
             double price = Double.parseDouble(s.toString());
-            String tip = "价格上沿是: " + StockXUtils.twoDeic(price + upRatio * price / 100) + " 元\n"
-                    + "价格下沿是: " + StockXUtils.twoDeic(price - downRatio * price / 100) + " 元\n";
+            String tip = "价格上沿是: " + StockXUtils.validDeic(price + upRatio * price / 100) + " 元\n"
+                    + "价格下沿是: " + StockXUtils.validDeic(price - downRatio * price / 100) + " 元\n";
             tvGridTradeTip.setText(tip);
         }
     }

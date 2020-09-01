@@ -76,14 +76,15 @@ public class CTStopWinCalc {
             double sencondPrice = Double.parseDouble(strStopPrice);
             double amount = Double.parseDouble(strAmount);
 
+            String tip = "占用成本金额为: " + (costPrice * amount * 100) + "元，\n";
             if (sencondPrice > costPrice) {
-                tvStopLossTip.setText("本次的止盈金额是: " + StockXUtils.twoDeic((sencondPrice - costPrice) * amount * 100) + " 元");
+                tip += "本次的止盈金额是: " + StockXUtils.validDeic((sencondPrice - costPrice) * amount * 100) + " 元";
             } else {
-                tvStopLossTip.setText("本次的止损金额是: " + StockXUtils.twoDeic((costPrice - sencondPrice) * amount * 100) + " 元");
+                tip += "本次的止损金额是: " + StockXUtils.validDeic((costPrice - sencondPrice) * amount * 100) + " 元";
             }
+            tvStopLossTip.setText(tip);
         }
     };
-
 
 
 }

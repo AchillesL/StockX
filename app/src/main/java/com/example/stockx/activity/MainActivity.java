@@ -439,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         if (needUpdateRiskMoney) {
-            editText.setText(StockXUtils.twoDeic(stopLossMoney));
+            editText.setText(StockXUtils.validDeic(stopLossMoney));
             editText.requestFocus();
             editText.setSelection(editText.getText().toString().length());
             commonAlertDialog = new CommonAlertDialog(MainActivity.this, title, null, editText.getRootView(), onClickListener);

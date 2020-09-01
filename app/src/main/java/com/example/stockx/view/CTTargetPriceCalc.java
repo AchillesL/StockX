@@ -139,7 +139,7 @@ public class CTTargetPriceCalc {
                     result = (highPrice - lowPrice) * StockXUtils.TARGET_PRICE_RATIO_HIGH / 100.0 + highPrice;
                     break;
             }
-            tvTip.setText("目标价是: " + StockXUtils.twoDeic(result));
+            tvTip.setText("目标价是: " + StockXUtils.validDeic(result));
         }
     }
 

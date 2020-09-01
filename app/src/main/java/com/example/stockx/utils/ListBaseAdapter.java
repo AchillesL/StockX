@@ -91,7 +91,7 @@ public class ListBaseAdapter extends BaseAdapter {
         TextView tvStopPrice = (TextView) view.findViewById(R.id.tv_stop_price);
         TextView tvOpenNum = (TextView) view.findViewById(R.id.tv_open_num);
         TextView tvStopWinMoney = (TextView) view.findViewById(R.id.tv_stop_win_money);
-        TextView tvRiskPercent = (TextView) view.findViewById(R.id.tv_risk_percent);
+        TextView tvCostAmount = (TextView) view.findViewById(R.id.tv_cost_amount);
         TextView tvTargePrice = (TextView) view.findViewById(R.id.tv_target_price);
         ImageView ivModify = (ImageView) view.findViewById(R.id.iv_modify);
         ImageView ivDelete = (ImageView) view.findViewById(R.id.iv_delete);
@@ -100,8 +100,8 @@ public class ListBaseAdapter extends BaseAdapter {
 
         final double costPrice = absBondsDataBean.getCostPrice();
         final double stopPrice = absBondsDataBean.getStopLossPrice();
-        tvCostPrice.setText(String.format(mContext.getResources().getString(R.string.cost_price), StockXUtils.twoDeic(costPrice)));
-        tvStopPrice.setText(String.format(mContext.getResources().getString(R.string.stop_price), StockXUtils.twoDeic(stopPrice)));
+        tvCostPrice.setText(String.format(mContext.getResources().getString(R.string.cost_price), StockXUtils.validDeic(costPrice)));
+        tvStopPrice.setText(String.format(mContext.getResources().getString(R.string.stop_price), StockXUtils.validDeic(stopPrice)));
 
         double stopOrWinMoney = Math.abs(costPrice - stopPrice) * absBondsDataBean.getBondsNum();
         if (absBondsDataBean instanceof BondsDataBean) {
@@ -117,24 +117,24 @@ public class ListBaseAdapter extends BaseAdapter {
         } else {
             ivSafeIcon.setVisibility(View.INVISIBLE);
             if (StockXUtils.isVaildPresetBondsDataBean((PresetBondsDataBean) absBondsDataBean)) {
-                tvStopWinMoney.setText(String.format(mContext.getResources().getString(R.string.stop_money), StockXUtils.intDeic(stopOrWinMoney)));
+                tvStopWinMoney.setText(String.format(mContext.getResources().getString(R.string.stop_money), StockXUtils.validDeic(stopOrWinMoney)));
             } else {
                 tvStopWinMoney.setText(String.format(mContext.getResources().getString(R.string.stop_money), "无"));
             }
             tvStopWinMoney.setTextColor(mContext.getResources().getColor(android.R.color.holo_blue_dark));
         }
 
-        double riskPercent = stopPrice >= costPrice ? 0 : (costPrice - stopPrice) * absBondsDataBean.getBondsNum() / mAccountDataBean.getTotalRiskMoney() * 100.0;
+        double costAmount = absBondsDataBean.getCostPrice() * absBondsDataBean.getBondsNum();
         if (absBondsDataBean instanceof BondsDataBean) {
-            tvRiskPercent.setText(String.format(mContext.getResources().getString(R.string.risk_percent), StockXUtils.twoDeic(riskPercent)));
-            tvRiskPercent.setVisibility(View.VISIBLE);
+            tvCostAmount.setText(String.format(mContext.getResources().getString(R.string.cost_amount), StockXUtils.validDeic(costAmount)));
+            tvCostAmount.setVisibility(View.VISIBLE);
         } else {
-            tvRiskPercent.setVisibility(View.GONE);
+            tvCostAmount.setVisibility(View.GONE);
         }
         if (Double.compare(absBondsDataBean.getTargetPrice(), 0) == 0) {
             tvTargePrice.setText(String.format(mContext.getResources().getString(R.string.target_price), "无"));
         } else {
-            tvTargePrice.setText(String.format(mContext.getResources().getString(R.string.target_price), StockXUtils.twoDeic(absBondsDataBean.getTargetPrice())));
+            tvTargePrice.setText(String.format(mContext.getResources().getString(R.string.target_price), StockXUtils.validDeic(absBondsDataBean.getTargetPrice())));
         }
 
         tvOpenNum.setText(String.format(mContext.getResources().getString(R.string.open_num), absBondsDataBean.getBondsNum()));

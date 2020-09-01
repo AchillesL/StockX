@@ -20,6 +20,24 @@ public class StockXUtils {
     public static double TARGET_PRICE_RATIO_MID = 100;
     public static double TARGET_PRICE_RATIO_HIGH = 120;
 
+    public static String validDeic(double value) {
+        String data = String.format("%.3f", value);
+        StringBuffer buffer = new StringBuffer(data.split("\\.")[1]);
+        while (buffer.length() != 0) {
+            int index = buffer.length() - 1;
+            if (buffer.charAt(index) == '0') {
+                buffer.deleteCharAt(index);
+            } else {
+                break;
+            }
+        }
+        if (buffer.length() == 0) {
+            return data.split("\\.")[0];
+        } else {
+            return data.split("\\.")[0] + "." + buffer.toString();
+        }
+    }
+
     public static String twoDeic(double value) {
         return String.format("%.2f", value);
     }

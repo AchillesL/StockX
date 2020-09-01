@@ -11,7 +11,7 @@
     <string name="open_num">开仓数量: %d&#160;(股)</string>
     <string name="stop_money">止损金额: %s</string>
     <string name="win_money">盈利金额: %s</string>
-    <string name="risk_percent">风险占比: %s%%</string>
+    <string name="cost_amount">使用资金: %s</string>
     <string name="target_price">目标价格: %s</string>
 
     <string name="tip">提示: \n\n①本次操作消耗%s元风险资金。\n②账户风险金额剩余%s元。\n③资金风险度将从%s%%达到%s%%。</string>

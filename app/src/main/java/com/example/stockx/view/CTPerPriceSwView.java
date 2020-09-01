@@ -105,9 +105,9 @@ public class CTPerPriceSwView {
 
             String tip = "";
             if (mode == MODE_PRICE_2_PER) {
-                tip += "目标价到基准价的距离是: " + StockXUtils.twoDeic((input2 - input1) / input1 * 100) + "%";
+                tip += "目标价到基准价的距离是: " + StockXUtils.validDeic((input2 - input1) / input1 * 100) + "%";
             } else {
-                tip += "目标价是: " + StockXUtils.twoDeic(input1 * input2 / 100 + input1);
+                tip += "目标价是: " + StockXUtils.validDeic(input1 * input2 / 100 + input1);
             }
             tvTip.setText(tip);
         }

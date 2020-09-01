@@ -112,21 +112,21 @@ public class StopLossAlertDialog {
             if (Double.compare(absBondsDataBean.getTargetPrice(), 0) == 0) {
                 edTargePrice.setText("");
             } else {
-                edTargePrice.setText(StockXUtils.twoDeic(absBondsDataBean.getTargetPrice()));
+                edTargePrice.setText(StockXUtils.validDeic(absBondsDataBean.getTargetPrice()));
             }
 
             if (Double.compare(absBondsDataBean.getCostPrice(), 0) == 0) {
                 edCostPrice.setText("");
                 edCostPrice.requestFocus();
             } else {
-                edCostPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getCostPrice()));
+                edCostPrice.setText(StockXUtils.validDeic(absBondsDataBean.getCostPrice()));
             }
 
             if (Double.compare(absBondsDataBean.getStopLossPrice(), 0) == 0) {
                 edStopPrice.setText("");
                 edStopPrice.requestFocus();
             } else {
-                edStopPrice.setText(StockXUtils.twoDeic(absBondsDataBean.getStopLossPrice()));
+                edStopPrice.setText(StockXUtils.validDeic(absBondsDataBean.getStopLossPrice()));
             }
 
         } else {
@@ -149,7 +149,7 @@ public class StopLossAlertDialog {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (Double.compare(ctTargetPriceCalc.getTargePrice(), 0) != 0) {
-                                    edTargePrice.setText(StockXUtils.twoDeic(ctTargetPriceCalc.getTargePrice()));
+                                    edTargePrice.setText(StockXUtils.validDeic(ctTargetPriceCalc.getTargePrice()));
                                     edTargePrice.requestFocus();
                                     edTargePrice.setSelection(edTargePrice.getText().toString().length());
                                 }
@@ -254,10 +254,10 @@ public class StopLossAlertDialog {
                         }
                         int tipRes = stopMoney > 0 ? R.string.tip : R.string.tip2;
                         String tip = String.format(context.getResources().getString(tipRes),
-                                StockXUtils.twoDeic(Math.abs(stopMoney)),
-                                StockXUtils.twoDeic(accountDataBean.getTotalRiskMoney() - (accountDataBean.getUsedRiskMoney() + stopMoney)),
-                                StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100.0),
-                                StockXUtils.twoDeic((stopMoney + accountDataBean.getUsedRiskMoney()) / accountDataBean.getTotalRiskMoney() * 100)
+                                StockXUtils.validDeic(Math.abs(stopMoney)),
+                                StockXUtils.validDeic(accountDataBean.getTotalRiskMoney() - (accountDataBean.getUsedRiskMoney() + stopMoney)),
+                                StockXUtils.validDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100.0),
+                                StockXUtils.validDeic((stopMoney + accountDataBean.getUsedRiskMoney()) / accountDataBean.getTotalRiskMoney() * 100)
                         );
                         setTextViewText(false, tip);
                         canAdd2DB = true;
@@ -268,10 +268,10 @@ public class StopLossAlertDialog {
                             stopMoney = 0;
                         }
                         String tip = String.format(context.getResources().getString(R.string.tip2),
-                                StockXUtils.twoDeic(Math.abs(stopMoney)),
-                                StockXUtils.twoDeic(accountDataBean.getTotalRiskMoney() - (accountDataBean.getUsedRiskMoney() + stopMoney)),
-                                StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100.0),
-                                StockXUtils.twoDeic((stopMoney + accountDataBean.getUsedRiskMoney()) / accountDataBean.getTotalRiskMoney() * 100)
+                                StockXUtils.validDeic(Math.abs(stopMoney)),
+                                StockXUtils.validDeic(accountDataBean.getTotalRiskMoney() - (accountDataBean.getUsedRiskMoney() + stopMoney)),
+                                StockXUtils.validDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100.0),
+                                StockXUtils.validDeic((stopMoney + accountDataBean.getUsedRiskMoney()) / accountDataBean.getTotalRiskMoney() * 100)
                         );
                         setTextViewText(false, tip);
                         canAdd2DB = true;
@@ -313,10 +313,10 @@ public class StopLossAlertDialog {
 
         private String getTipString(double stopMoney, double remainRiskMoney) {
             return String.format(context.getResources().getString(R.string.tip),
-                    StockXUtils.twoDeic(stopMoney),
-                    StockXUtils.twoDeic(remainRiskMoney - stopMoney),
-                    StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100),
-                    StockXUtils.twoDeic((accountDataBean.getUsedRiskMoney() + stopMoney) / accountDataBean.getTotalRiskMoney() * 100));
+                    StockXUtils.validDeic(stopMoney),
+                    StockXUtils.validDeic(remainRiskMoney - stopMoney),
+                    StockXUtils.validDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100),
+                    StockXUtils.validDeic((accountDataBean.getUsedRiskMoney() + stopMoney) / accountDataBean.getTotalRiskMoney() * 100));
         }
 
         public boolean canAdd2DB() {
