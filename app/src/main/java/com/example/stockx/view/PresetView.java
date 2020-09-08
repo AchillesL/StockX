@@ -102,7 +102,6 @@ public class PresetView {
             public void onClick(View v) {
                 if (!mIsCanAdd) {
                     Toast.makeText(mContext, "已超风险额度!", Toast.LENGTH_SHORT).show();
-                    return;
                 }
                 StopLossAlertDialog stopLossAlertDialog = new StopLossAlertDialog(mContext, StopLossAlertDialog.MODE_FIRST_CREATE_PRESET, null, mAccountDataBean);
                 stopLossAlertDialog.setCallbackPreset(new StopLossAlertDialog.ICallbackPreset() {
@@ -140,8 +139,9 @@ public class PresetView {
         String tip = "";
         double remainRiskMoney = mAccountDataBean.getTotalRiskMoney() - mAccountDataBean.getUsedRiskMoney() - totalStopLoss;
         double remainMonthRiskMoney = mAccountDataBean.getTotalMonthRiskMoney() - mAccountDataBean.getUsedMonthRiskMoney() - totalStopLoss;
-        tip += "消耗风险金额为：" + StockXUtils.intDeic(totalStopLoss) + "\n" +
-                "剩余风险金额为：" + StockXUtils.intDeic(remainRiskMoney) + " (单次) | " + StockXUtils.intDeic(remainMonthRiskMoney) + " (月度)";
+        tip += "消耗风险额：" + StockXUtils.intDeic(totalStopLoss) + " | 占比：" + StockXUtils.twoDeic(totalStopLoss / mAccountDataBean.getCurrentMoney() * 100) +
+                "%\n" +
+                "剩余风险额：" + StockXUtils.intDeic(remainRiskMoney) + " (单次) | " + StockXUtils.intDeic(remainMonthRiskMoney) + " (月度)";
         mTvStatus.setText(tip);
         if (remainRiskMoney < 0 || remainMonthRiskMoney < 0) {
             mIsCanAdd = false;

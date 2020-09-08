@@ -270,8 +270,8 @@ public class StopLossAlertDialog {
                         String tip = String.format(context.getResources().getString(R.string.tip2),
                                 StockXUtils.validDeic(Math.abs(stopMoney)),
                                 StockXUtils.validDeic(accountDataBean.getTotalRiskMoney() - (accountDataBean.getUsedRiskMoney() + stopMoney)),
-                                StockXUtils.validDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100.0),
-                                StockXUtils.validDeic((stopMoney + accountDataBean.getUsedRiskMoney()) / accountDataBean.getTotalRiskMoney() * 100)
+                                StockXUtils.twoDeic(accountDataBean.getUsedRiskMoney() / accountDataBean.getTotalRiskMoney() * 100.0),
+                                StockXUtils.twoDeic((stopMoney + accountDataBean.getUsedRiskMoney()) / accountDataBean.getTotalRiskMoney() * 100)
                         );
                         setTextViewText(false, tip);
                         canAdd2DB = true;
