@@ -35,13 +35,12 @@
     </item>
 
     <item
-        android:id="@+id/menu_add_preset_item"
-        android:title="添加预备单" />
-
-    <item
         android:id="@+id/menu_common_tools"
         android:title="常用工具" />
 
+    <item
+        android:id="@+id/menu_add_preset_item"
+        android:title="添加预备单" />
 
     <item android:title="其他">
         <menu>

@@ -35,6 +35,9 @@ public class CommonToolsActivity extends AppCompatActivity {
     private void initView() {
         accountId = getIntent().getLongExtra(MainActivity.S_ID_ACCOUNT, -1);
         viewLayout = findViewById(R.id.ll);
+
+        new CTStopWinCalc(this, viewLayout, accountId);
+
         CTCostPirceCalcView ctCostPirceCalcView = new CTCostPirceCalcView(this, viewLayout);
         //加仓成本价计算
         if (getIntent() != null) {
@@ -65,7 +68,7 @@ public class CommonToolsActivity extends AppCompatActivity {
 
         new CTGridTradeView(this, viewLayout);
         new CTPerPriceSwView(this, viewLayout);
-        new CTStopWinCalc(this, viewLayout, accountId);
+
 
     }
 }

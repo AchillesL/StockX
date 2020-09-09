@@ -2,6 +2,7 @@ package com.example.stockx.view;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,8 +15,11 @@ import android.widget.Toast;
 
 import com.example.greendao.DaoManager;
 import com.example.stockx.R;
+import com.example.stockx.activity.MainActivity;
+import com.example.stockx.activity.PresetActivity;
 import com.example.stockx.bean.PresetBondsDataBean;
 import com.example.stockx.utils.StockXUtils;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class CTStopWinCalc {
@@ -32,7 +36,7 @@ public class CTStopWinCalc {
     private Context context;
     private long accountId;
 
-    public CTStopWinCalc(final Context context, ViewGroup viewGroup, final long accountId) {
+    public CTStopWinCalc(final Context context, final ViewGroup viewGroup, final long accountId) {
         this.context = context;
         this.accountId = accountId;
         View view = LayoutInflater.from(context).inflate(R.layout.cardview_item_stop_win_calc, viewGroup);
@@ -77,6 +81,15 @@ public class CTStopWinCalc {
                         DaoManager.getInstance().getDaoSession().getPresetBondsDataBeanDao().insert(presetBondsDataBean);
                         Toast.makeText(context, "保存到预备单成功!", Toast.LENGTH_SHORT).show();
                         tvStopLossClear.callOnClick();
+
+                        Snackbar.make(viewGroup, "查看预备单", Snackbar.LENGTH_LONG).setAction("点击", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, PresetActivity.class);
+                                intent.putExtra(MainActivity.S_ID_ACCOUNT, accountId);
+                                context.startActivity(intent);
+                            }
+                        }).show();
                     }
                 });
                 commonAlertDialog.show();
