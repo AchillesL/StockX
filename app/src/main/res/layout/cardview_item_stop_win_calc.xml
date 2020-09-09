@@ -83,6 +83,17 @@
                 android:text="清除"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_stop_loss_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/tv_stop_loss_clear"
+                android:layout_marginLeft="15dp"
+                android:visibility="invisible"
+                android:text="保存"
+                android:textColor="@android:color/holo_blue_dark"
+                android:textSize="14sp" />
         </RelativeLayout>
 
     </LinearLayout>

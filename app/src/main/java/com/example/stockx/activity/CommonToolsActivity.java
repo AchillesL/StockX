@@ -21,6 +21,7 @@ import com.example.stockx.view.CTTargetPriceCalc;
 public class CommonToolsActivity extends AppCompatActivity {
 
     private LinearLayout viewLayout;
+    private long accountId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class CommonToolsActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        accountId = getIntent().getLongExtra(MainActivity.S_ID_ACCOUNT, -1);
         viewLayout = findViewById(R.id.ll);
         CTCostPirceCalcView ctCostPirceCalcView = new CTCostPirceCalcView(this, viewLayout);
         //加仓成本价计算
@@ -63,7 +65,7 @@ public class CommonToolsActivity extends AppCompatActivity {
 
         new CTGridTradeView(this, viewLayout);
         new CTPerPriceSwView(this, viewLayout);
-        new CTStopWinCalc(this, viewLayout);
+        new CTStopWinCalc(this, viewLayout, accountId);
 
     }
 }

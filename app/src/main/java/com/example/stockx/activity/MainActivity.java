@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.menu_common_tools: {
                 Intent intent = new Intent(MainActivity.this, CommonToolsActivity.class);
+                intent.putExtra(S_ID_ACCOUNT,getCurrentAccountDataBean().getId());
                 startActivity(intent);
                 break;
             }
