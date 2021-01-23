@@ -215,7 +215,7 @@ public class CTCostPirceCalcView {
             tvCostPriceTip.setTag(R.id.tag_amount, curAmount + curAddAmount);
             tvCostPriceTip.setText(
                     "成本价变为:  " + StockXUtils.twoDeic(costPrice) + "元"
-                            + "\n该股市值为:  " + StockXUtils.twoDeic(sum) + "元"
+                            + "\n该股票当前市值为:  " + StockXUtils.twoDeic(sum) + "元"
                             + "\n现价到成本价的距离:  " + StockXUtils.twoDeic(distance) + "%")
             ;
         }

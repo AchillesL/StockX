@@ -2,7 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao' // 应用插件
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.example.stockx"

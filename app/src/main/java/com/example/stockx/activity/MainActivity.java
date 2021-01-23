@@ -122,7 +122,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId != R.id.menu_add_account && mSettingBean.getCurrentAccountID() == -1) {
+        if (mSettingBean.getCurrentAccountID() == -1 &&
+                itemId != R.id.menu_add_account &&
+                itemId != R.id.menu_common_tools &&
+                itemId != R.id.menu_other &&
+                itemId != R.id.menu_memo && itemId != R.id.menu_help) {
             Toast.makeText(this, "请先创建账户!", Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -201,7 +205,10 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.menu_common_tools: {
                 Intent intent = new Intent(MainActivity.this, CommonToolsActivity.class);
-                intent.putExtra(S_ID_ACCOUNT,getCurrentAccountDataBean().getId());
+                AccountDataBean accountDataBean  = getCurrentAccountDataBean();
+                if (accountDataBean != null) {
+                    intent.putExtra(S_ID_ACCOUNT,accountDataBean.getId());
+                }
                 startActivity(intent);
                 break;
             }
