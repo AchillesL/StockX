@@ -40,7 +40,7 @@ public class CTPerPriceSwView {
         edInput1 = (TextInputEditText) view.findViewById(R.id.ed_input_1);
         edInput2 = (TextInputEditText) view.findViewById(R.id.ed_input_2);
         tilInput2 = (TextInputLayout) view.findViewById(R.id.til_input_2);
-        tvTip = (TextView) view.findViewById(R.id.tv_tip);
+        tvTip = (TextView) view.findViewById(R.id.tv_price_price_per_sw_tip);
         tvClear = (TextView) view.findViewById(R.id.tv_clear);
 
         initView();

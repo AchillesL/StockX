@@ -15,6 +15,7 @@ import com.example.stockx.bean.BondsDataBean;
 import com.example.stockx.view.CTCostPirceCalcView;
 import com.example.stockx.view.CTGridTradeView;
 import com.example.stockx.view.CTPerPriceSwView;
+import com.example.stockx.view.CTStopMoneyCalcView;
 import com.example.stockx.view.CTStopWinCalc;
 import com.example.stockx.view.CTTargetPriceCalc;
 
@@ -36,8 +37,6 @@ public class CommonToolsActivity extends AppCompatActivity {
         accountId = getIntent().getLongExtra(MainActivity.S_ID_ACCOUNT, -1);
         viewLayout = findViewById(R.id.ll);
 
-        new CTStopWinCalc(this, viewLayout, accountId);
-
         CTCostPirceCalcView ctCostPirceCalcView = new CTCostPirceCalcView(this, viewLayout);
         //加仓成本价计算
         if (getIntent() != null) {
@@ -58,6 +57,10 @@ public class CommonToolsActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        new CTStopMoneyCalcView(this,viewLayout);
+        new CTStopWinCalc(this, viewLayout, accountId);
+
         CardView cardView = new CardView(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(2, 3, 2, 18);

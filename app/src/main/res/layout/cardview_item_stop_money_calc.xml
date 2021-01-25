@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,51 +16,49 @@
         android:padding="15dp"
         tools:showIn="@layout/activity_common_tools">
 
-        <RelativeLayout
+        <TextView
+            style="@style/textSize"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_title"
-                style="@style/textSize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="价格转百分比" />
-
-            <ImageView
-                android:id="@+id/iv_swicth"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/switch_per_price" />
-
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="止盈价格计算" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_input_1"
+                android:id="@+id/ed_stop_money_cost_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="输入第一个价格(基准价)"
+                android:hint="输入目前成本价"
                 android:inputType="numberDecimal"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_input_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_input_2"
+                android:id="@+id/ed_stop_money_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="输入第二个价格(目标价)"
-                android:inputType="numberSigned|numberDecimal"
+                android:hint="输入目前仓位(手)"
+                android:inputType="numberDecimal"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/ed_stop_money"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="输入需要获利金额"
+                android:inputType="numberDecimal"
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,21 +69,25 @@
             android:paddingBottom="5dp">
 
             <TextView
-                android:id="@+id/tv_price_price_per_sw_tip"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_stop_win_tip"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/tv_clear"
-                android:textSize="16sp" />
+                android:layout_toLeftOf="@id/tv_stop_win_clear"
+                android:layout_alignParentLeft="true"
+                android:textSize="16sp"
+                android:visibility="invisible" />
 
             <TextView
-                android:id="@+id/tv_clear"
+                android:id="@+id/tv_stop_win_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_gravity="bottom"
                 android:layout_marginLeft="5dp"
                 android:text="清除"
                 android:textColor="@android:color/holo_blue_dark"
                 android:textSize="14sp" />
+
         </RelativeLayout>
 
     </LinearLayout>
