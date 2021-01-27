@@ -88,8 +88,8 @@ public class CTStopMoneyCalcView {
             float stopMoney = Float.parseFloat(stopMoneyStr);
 
             float totalMoney = costPrice * currentAmount * 100 + stopMoney;
-            /*在计算得到的总价上，加入0.45%的滑点、手续费处理*/
-            float stopWinPrice = (float) ((totalMoney + totalMoney * 0.0045) / (currentAmount * 100));
+            /*在计算得到的总价上，加入0.6%的滑点处理*/
+            float stopWinPrice = (float) ((totalMoney + totalMoney * 0.006) / (currentAmount * 100));
             String tip = "获得此盈利金额，需要在价格: " + StockXUtils.twoDeic(stopWinPrice) + " 处清仓!\n";
             tvTip.setText(tip);
             tvTip.setVisibility(View.VISIBLE);
